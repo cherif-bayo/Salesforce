@@ -13,4 +13,5 @@ public class AccountOrdersFromContactsExtension{
     
         this.orders = [select OrderNumber, Client_final__r.Name, Status, TotalAmountAfterDiscount__c from Order where Client_final__c in :contacts];
     }
+    // test adding comment ad push to github
 }
