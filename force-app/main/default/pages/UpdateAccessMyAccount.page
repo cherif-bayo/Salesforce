@@ -1,0 +1,6 @@
+<apex:page controller="UpdateAccessMyAccount">
+<apex:form >
+  <apex:outputText value="{!CountOrders}"></apex:outputText>
+  <apex:commandButton action="{!Inverse}" value="Inverse" />
+  </apex:form>
+</apex:page>

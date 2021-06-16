@@ -1,0 +1,29 @@
+<apex:page standardController="Facture__c" extensions="FactureSendEmailExtension_L" action="{!Preview}">
+<apex:form >
+    <apex:pageBlock title="Envoyer la facture par email">
+        <apex:pageBlockButtons >                      
+            <apex:commandButton action="{!Send}" value="Envoyer" rendered="{!HasPreview}" />
+            <apex:commandButton action="{!Cancel}" value="Retour" /> 
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection columns="1" rendered="{!HasPreview}" title="Aperçu de l'email" collapsible="false">
+            <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="Adresse"/>
+                <apex:outputText value="{!EmailAddress}" escape="false" />
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="Sujet"/>
+                <apex:outputText value="{!EmailSubject}" escape="false" />
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="Pièce jointe"/>
+                <apex:commandLink value="{!EmailAttachmentName}" action="/{!EmailAttachmentLink}" target="_blank" />
+             </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="Contenu"/>
+                <apex:outputText value="{!EmailText}" escape="false" />
+             </apex:pageBlockSectionItem>
+         </apex:pageBlockSection>
+        <apex:pageMessages />
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page controller="FillAddressControllerProAccounts">
+<apex:form >
+  Pro Accounts: <apex:outputText value="{!CountProAccounts}"></apex:outputText>
+    <apex:commandButton action="{!AddAddressToProAccounts}" value="AddAddress Pro Accounts" />
+  </apex:form>
+</apex:page>

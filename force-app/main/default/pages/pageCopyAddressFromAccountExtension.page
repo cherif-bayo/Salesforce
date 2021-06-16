@@ -1,0 +1,104 @@
+<apex:page standardController="Order" extensions="CopyAddressFromAccountExtension">
+        <style type="text/css">
+        label{
+            font-weight: bold;
+        }
+        h1{
+            font-size: 18px;
+        }
+        </style>
+    
+        <apex:form >
+            <apex:pageBlock title="Copier l'adresse du compte sur la commande">
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="Copier" action="{!copyAddress}" rendered="{!NotChanged}" />
+                    <apex:commandButton value="Retour" action="/{!order.Id}" rendered="{!(!NotChanged)}" />
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection columns="2" rendered="{!NotChanged}">
+                    <apex:pageblockSectionItem >
+                        <h1>Facturation</h1>
+                    </apex:pageblockSectionItem>
+                    <apex:pageblockSectionItem >
+                        <h1>Expédition</h1>
+                    </apex:pageblockSectionItem>
+                    <apex:pageblockSectionItem >
+                        <apex:pageBlockSection columns="3">
+                            <apex:pageblockSectionItem >
+                                <label>Rue</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.BillingStreet}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Code postal</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.BillingPostalCode}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Ville</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.BillingCity}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Etat</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.BillingState}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Pays</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.BillingCountry}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                        </apex:pageBlockSection>
+                        </apex:pageBlockSectionItem>
+                        <apex:pageblockSectionItem >
+                        <apex:pageBlockSection columns="3">
+                            <apex:pageblockSectionItem >
+                                <label>Rue</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.ShippingStreet}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Code postal</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.ShippingPostalCode}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Ville</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.ShippingCity}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Etat</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.ShippingState}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem />
+                            <apex:pageblockSectionItem >
+                                <label>Pays</label>
+                            </apex:pageblockSectionItem>
+                            <apex:pageblockSectionItem >
+                                <apex:outputText value="{!order.ShippingCountry}"></apex:outputText>
+                            </apex:pageblockSectionItem>
+                        </apex:pageBlockSection>
+                        </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageMessages />
+            </apex:pageBlock>
+        </apex:form>
+    </apex:page>

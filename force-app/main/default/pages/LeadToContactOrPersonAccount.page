@@ -1,0 +1,24 @@
+<apex:page standardController="Lead" extensions="LeadToContactOrPersonAccountExtension">
+    <apex:form >
+        <apex:pageBlock title="Convertir une piste en contact ou compte personnel" mode="edit">
+            <apex:pageBlockButtons >
+                    <apex:commandButton action="{!Convert}" value="Convertir" /> 
+                    <apex:commandButton action="/{!Lead.Id}" value="Annuler"/> 
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <apex:pageBlockSection id="sectionMain" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Type de conversion"></apex:outputText>
+                    <apex:selectRadio value="{!ConversionType}">
+                        <apex:selectOptions value="{!ConversionTypes}"/>
+                        <apex:actionSupport event="onchange" reRender="sectionMain" />
+                    </apex:selectRadio>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!IsContactConversion}">
+                    <apex:outputText value="Compte professionnel à lier"></apex:outputText>
+                    <apex:inputField value="{!Order.AccountId}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page controller="FillAddressControllerOrders">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!AddAddressToOrders}" value="Add Address Orders" />
+  </apex:form>
+</apex:page>

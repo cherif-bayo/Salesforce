@@ -1,0 +1,96 @@
+<apex:page standardController="Quote" renderAs="advanced_pdf" showHeader="false" extensions="QuoteExtensionJp" standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.Addinsoft_Css)}" />
+        <title>Quote #{!Quote.QuoteNumber}</title>
+        <style>body { font-family: 'Arial Unicode MS'; font-size:8pt;}</style> 
+    </head>
+    <body>   
+        <!-- logo Addinsoft-->
+        <div><apex:image url="{!URLFOR($Resource.ADDINSOFT_LOGO)}"/></div>
+            
+        <!-- Addinsof Address and contacts -->        
+        <div class="column-1-jp">
+            <ul>
+                <li><span class="l-orange">{!Quote.AccountName__c}</span> 御中</li>
+                <li><span class="l-orange">{!Quote.ContactName__c}</span></li>
+                <li>{!Country}</li>                
+                <li>{!State}</li>
+                <li>{!Quote.BillingPostalCode}</li>
+                <li>{!Quote.BillingCity}</li>
+                <li><apex:outputText value="{!SUBSTITUTE(JSENCODE(Quote.BillingStreet),'\r\n','<li></li>')}" escape="false" /></li>                
+            </ul>
+        </div>
+
+        <!-- client address and contacts -->
+        <div class="column-2-jp">
+            <ul>
+                <li>マインドウエア総研株式会社（XLSTAT Japan)</li>
+                <li>〒700-0024 岡山県岡山市北区駅元町1-4</li>
+                <li>ターミナルスクエア</li>
+                <li>T&eacute;l&nbsp;: 086-226-0028</li>
+                <li>Fax&nbsp;: 086-238-3023</li>
+                <li>e-mail : <a href="mailto:sales@xlstat.co.jp">sales@xlstat.co.jp</a></li>
+                <li>Web: <a href="https://www.xlstat.com/">https://www.xlstat.com/ja/</a></li>                
+            </ul>
+        </div>
+
+        <!-- Quote number and date -->
+        <div class="column-1l">
+            <p><span class="m-bold">Date : </span><apex:outputText value="{0,date,yyyy-MM-dd}"><apex:param value="{!Quote.Date__c}" /></apex:outputText></p>
+
+            <!-- Durée de validité du devis -->
+            <p class="m-bold">{!$Label.jp_validite_devis}</p>                   
+        </div>
+        <div class="column-2">
+            <p class="m-bold">QUOTE {!Quote.QuoteNumber}</p>      
+        </div>        
+                
+        <!-- Lignes de produits --> 
+        <div class="mt-2 border-top"><table class="table-produits">
+            <thead><tr>
+                <th>数 量</th>
+                <th>製 品</th>
+                <th>ユー ザー 種別</th>
+                <th>ラ イ セン ス種別</th>
+                <th>単 価</th>
+                <th align="right">金 額</th>
+            </tr></thead>
+            <tbody>
+                <apex:variable value="{!1}" var="i"/>
+                <apex:repeat value="{!quoteLineItems}" var="quoteLineItem">
+                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};">
+                    <td><apex:outputText value="{0, number, integer}"><apex:param value="{!quoteLineItem.quantity}" /></apex:outputText></td>
+                    <td>{!quoteLineItem.PricebookEntry.Product2.Libelle_Devis__c}</td>
+                    <td>{!quoteLineItem.PricebookEntry.Product2.Domaine_utilisateur_en__c}</td>
+                    <td>{!quoteLineItem.PricebookEntry.Product2.Type_licence_desc_EN__c}</td>
+                    <td>{!quoteLineItem.UnitPriceWithCurrency__c}</td>
+                    <td align="right">{!quoteLineItem.TotalPriceAfterDiscountWithCurrency__c}</td>
+                </tr>
+                <apex:variable value="{!i+1}" var="i" />
+                </apex:repeat>
+                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="8">&nbsp;</td></tr>
+                <tr style="background-color:{!IF(mod(i+1,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="8">&nbsp;</td></tr>
+                <tr><td colspan="7">&nbsp;</td></tr>
+                <apex:variable var="foo" value="bar" rendered="{!hasTVA}">
+                    <tr><td align="right" colspan="7">小 計 {!Quote.TotalAmountAfterDiscountWithCurrency__c}</td></tr>
+                </apex:variable>
+                <apex:variable var="foo" value="bar" rendered="{!hasTVA}">
+                    <tr><td align="right" colspan="7">税 ({!Quote.TVA__c} %) {!Quote.AmountTVAWithCurrency__c}</td></tr>
+                </apex:variable>
+                <tr><td align="right" colspan="7"><span class="m-bold">合 計 {!Quote.TotalAmountAfterTVAWithCurrency__c}</span></td></tr>
+            </tbody>
+        </table></div>           
+
+        <!--Compte Bancaire -->
+        <p class="mt-4" rendered="{!Quote.CurrencyIsoCode == 'USD'}">
+            <ul>
+                <li>※法人様でご購入の場合は、請求書でお取引頂けます。上記Eメール・アドレスにご連絡ください。</li>
+                <li>※学生用ライセンスをご希望の場合は、上記Eメール・アドレスに学生証のコピーをお送りください。</li>
+                <li>※個人でご購入（立替）のお客様はコンビニ決済のリンクをお知らせしますので、上記Eメール・アドレスにご連絡ください。</li>
+            </ul>
+        </p>
+                           
+        <!-- Footer : Thanks -->    
+        <div class="footer"><p class="underline-orange mt-2">Thank you for choosing our products</p></div>
+    </body>        
+</apex:page>

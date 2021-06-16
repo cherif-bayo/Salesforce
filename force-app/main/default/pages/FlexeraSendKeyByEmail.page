@@ -1,0 +1,35 @@
+<apex:page controller="FlexeraSendKeyByEmailController">
+<apex:form >
+    <apex:pageBlock title="Envoyer la clé nalpeiron par email">
+        <apex:pageBlockButtons >
+                <apex:commandButton action="{!Preview}" value="Pré-visualiser" rendered="{!(!HasPreview)}" />                     
+                <apex:commandButton action="{!Send}" value="Envoyer" rendered="{!HasPreview}" /> 
+                <apex:commandButton action="/{!OrderId}" value="{!IF(EmailSent, 'Retour', 'Annuler')}"/> 
+        </apex:pageBlockButtons>
+        <apex:pageMessages />
+        <apex:repeat value="{!wpContacts}" var="c">
+        <apex:pageBlock title="Contact">
+        <apex:pageBlockSection columns="1">
+            <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="NameContact" value="Name"/>
+                <apex:outputText id="NameContact" value="{!c.Contact.Name}" />
+             </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="EmailContact" value="Email"/>
+                 <apex:selectList value="{!c.contactEmail}" size="1">
+                    <apex:selectOptions value="{!c.ContactsAccountEmails}"/>
+                </apex:selectList>
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="subject" value="Subject"/>
+                 <apex:inputText id="subject" value="{!subject}" />
+             </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+        </apex:pageBlock>
+        </apex:repeat> 
+        <apex:pageBlock title="Pré-visualisation" rendered="{!HasPreview}">
+            <apex:outputText value="{!HtmlBody}" escape="false" />
+        </apex:pageBlock>
+    </apex:pageBlock>
+    </apex:form>
+            </apex:page>

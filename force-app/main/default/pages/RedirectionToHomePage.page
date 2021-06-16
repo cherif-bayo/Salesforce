@@ -1,0 +1,2 @@
+<apex:page controller="CTL_RedirectionToHomePage" action="{!urlRedirection}">
+</apex:page>

@@ -1,0 +1,7 @@
+<apex:page standardController="Flexera_Key__c" extensions="ListFlexeraSendKeyByEmailUpdate"  recordSetVar="keys" action="{!callFlexeraSendKeyByEmailUpdate}">
+    <apex:pageMessages id="showmsg"></apex:pageMessages>
+
+    <apex:form >
+        <apex:commandButton value="Cancel" action="{!cancel}" style="width:90px" rerender="showmsg"/>
+    </apex:form>
+</apex:page>

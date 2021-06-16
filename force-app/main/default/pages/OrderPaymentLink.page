@@ -1,0 +1,21 @@
+<apex:page standardController="Order" extensions="OrderPaymentLinkExtension" >
+    <apex:form > 
+        <apex:pageBlock title="Génération d'un lien de paiement" mode="edit"> 
+            <apex:pageMessages id="messages" />
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Montant du lien de paiement"></apex:outputLabel>
+                    <apex:inputText value="{!montant}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Email du client"></apex:outputLabel>
+                    <apex:inputText value="{!email}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Générer un lien" action="{!generateLink}"/>
+                <apex:commandButton value="Annuler" action="{!cancel}"/>
+            </apex:pageBlockButtons> 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

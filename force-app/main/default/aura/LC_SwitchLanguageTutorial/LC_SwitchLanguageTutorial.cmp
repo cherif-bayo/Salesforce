@@ -1,0 +1,15 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:hasRecordId" access="global" controller="CTL_SwitchLanguage">	
+	<aura:attribute name="recordId" type="Id" />
+	<aura:attribute name="localisedArticles" type="Map" access="global" /> 
+	<aura:attribute name="keys" type="List"  access="global" />
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />    
+
+	<div class="slds-align_absolute-center slds-size_1-of-4">
+		<lightning:select name="localisedArticles" label="" aura:id="localisedArticles" onchange="{!c.onChange}">
+		<aura:iteration items="{!v.keys}" var="key" >
+		  <c:mapEntryChild map="{!v.localisedArticles}" key="{!key}"/>
+	    </aura:iteration>
+		</lightning:select>
+	</div>
+</aura:component>

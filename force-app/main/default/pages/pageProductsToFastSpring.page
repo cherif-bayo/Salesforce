@@ -1,0 +1,9 @@
+<apex:page controller="ProductsToFastSpring">
+<apex:form >
+<apex:commandButton value="Export EDU" action="{!ExportEDU}" />
+<apex:commandButton value="Export CMP" action="{!ExportCMP}"/>
+<apex:commandButton value="Export STU" action="{!ExportSTU}"/>
+<apex:commandButton value="Export CAM" action="{!ExportCAM}"/>
+<apex:inputTextarea value="{!FastSpringJSON}" />
+</apex:form>
+</apex:page>

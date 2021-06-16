@@ -1,0 +1,8 @@
+<apex:page controller="UpdateOrderDiscountDistributeur">
+  <apex:form >
+      <apex:outputText value="{!SizeOrderItems}"></apex:outputText>
+      <apex:commandButton action="{!UpdateOrders}" value="Update Orders" />
+      <apex:commandButton action="{!UpdateOrderItems}" value="Update Order Items" />
+      <apex:commandButton action="{!reInitOrders}" value="ReInit Orders" />            
+  </apex:form>
+</apex:page>

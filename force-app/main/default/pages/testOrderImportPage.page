@@ -1,0 +1,3 @@
+<apex:page sidebar="false" controller="ExportOrderImportController" action="{!export}" contentType="text/plain/#test.txt" cache="false">
+{!TextToUpload}
+</apex:page>

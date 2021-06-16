@@ -1,0 +1,10 @@
+<apex:page standardController="Contact" extensions="ContactToPersonAccountExtension">
+    <apex:form >
+        <apex:pageBlock title="Convertir un contact en compte personnel" mode="edit">
+            <apex:pageBlockButtons >
+                    <apex:commandButton action="{!Convert}" value="Convertir" /> 
+                    <apex:commandButton action="/{!Contact.Id}" value="Cancel"/> 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

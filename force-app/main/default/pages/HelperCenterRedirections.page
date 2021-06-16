@@ -1,0 +1,5 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" controller="CTL_HelpCenterRedirections" action="{!logErrorRedirection}">
+    <script>
+        document.location.replace('{!targetUrl}');
+    </script>  
+</apex:page>

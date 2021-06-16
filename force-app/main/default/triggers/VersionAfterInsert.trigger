@@ -1,0 +1,1 @@
+trigger VersionAfterInsert on Version__c(after insert) {}

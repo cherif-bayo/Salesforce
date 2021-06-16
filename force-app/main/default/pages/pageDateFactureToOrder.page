@@ -1,0 +1,6 @@
+<apex:page controller="DateFactureToOrder">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!AddDateFactureToOrder}" value="Add date facture" />
+  </apex:form>
+</apex:page>

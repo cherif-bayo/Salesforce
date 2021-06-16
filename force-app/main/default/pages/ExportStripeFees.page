@@ -1,0 +1,5 @@
+<apex:page standardController="stripe_payouts__c" extensions="ExportStripeFeesExtension" action="{!exportToExcel}" readOnly="false" contentType="application/vnd.ms-excel#fees.csv">{!header}
+      <apex:repeat value="{!rows}" var="r">
+          {!r.Created_UTC};{!r.description};{!r.gross};{!r.fee};{!r.net}
+      </apex:repeat> 
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page controller="FillAddressControllerPersonAccounts">
+<apex:form >
+  Person Accounts: <apex:outputText value="{!CountPersonAccounts}"></apex:outputText>
+    <apex:commandButton action="{!AddAddressToPersonAccounts}" value="Adresse Person Accounts" />
+  </apex:form>
+</apex:page>

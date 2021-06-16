@@ -1,0 +1,171 @@
+<apex:page controller="ZipFacturesController" showHeader="true" sidebar="false">
+ 
+<head>  
+    <title>Zip poour JPA</title>
+    <script type="text/javascript" src="/soap/ajax/26.0/connection.js"> </script>
+ 
+    <apex:includeScript value="{!URLFOR($Resource.jQuery2, '/jquery-2.1.4.min.js')}"/>
+ 
+    <apex:includeScript value="{!URLFOR($Resource.js_zip, '/dist/jszip.js')}"/>
+    
+    <style type="text/css">
+        .pagination{
+            text-align: center;
+            margin-top: 8px;
+        }
+        .pagination span, .pagination input{
+            margin-left: 4px;
+            margin-right: 4px;            
+        }
+    </style>
+ 
+    <script type="text/javascript">
+        var j$ = jQuery.noConflict();
+
+        j$(document).ready(function() {
+            //Hide upload button
+            var uploadZipButton = j$('input[id$=uploadZipButton]');
+            uploadZipButton.css('display', 'none');
+
+            //Instantiate JSZip
+            var zipFile = new JSZip();
+
+            //Intercept click event
+            j$('a[id=generateZipLink]').click(function(event) {
+                event.preventDefault();
+
+                var checkedSize = j$("input[name='att_ids_group[]']:checked").size();
+                var count = 0;
+
+                //Iterate over each selected file
+                j$("input[name='att_ids_group[]']:checked").each(function() {
+                    //Refresh zip process status
+                    j$('span[id$=zipStatus]').text('Ajout du fichier '+count);
+                     console.log(count + ' : '+j$(this).val());
+                    //Get file using javascript remoting
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.ZipFacturesController.getFileWrapper}',
+                        j$(this).val(),
+                        function(result, event){
+                            console.log('status ZipFacturesController.getFileWrapper :'+event.status);
+                            if (event.status) {
+                                //Refresh zip process status
+                                j$('span[id$=zipStatus]').text('Compression du fichier "' + result.filename + '"...');
+
+                                count++;
+
+                                //Add the file
+                                compressFile(zipFile, result.filename, result.content);
+
+                                //Once all the selected files have been compressed
+                                if (count == checkedSize) {
+                                    //Refresh zip process status
+                                    j$('span[id$=zipStatus]').text('Génération du fichier compressé');
+
+                                    //Send form
+                                    sendZip(zipFile);
+                                }
+                            } else if (event.type === 'exception') {
+                                alert('Exception: ' + event.message);
+                            } else {
+                                alert('Message: ' + event.message);
+                            }
+                        },
+                        {escape: true}
+                    );//End getAFile
+
+                });//end each selected attId
+            });//end click
+
+            //Compress one single file
+            function compressFile(zipFile, name, data) {
+                zipFile.file(name, data, {base64:true});
+            }
+
+            //Generate and upload zip file
+            function sendZip(zipFile) {
+                var data = zipFile.generate();
+
+                var zipContent = j$('input[id$=zipContent]');
+                zipContent.val(data);
+
+                //Refresh zip process status
+                j$('span[id$=zipStatus]').text('Génération du fichier compressé...');
+
+                var uploadZipButton = j$('input[id$=uploadZipButton]');
+                uploadZipButton.trigger('click');
+            }
+        });
+    </script>
+    
+    <script type="text/javascript">function setFocusOnLoad() {}</script>
+</head>
+ 
+<apex:form id="uploadZipForm" enctype="multipart/form-data">
+    <apex:inputHidden id="zipContent" value="{!zipContent}" />
+     
+    <apex:commandButton id="uploadZipButton" value="Upload" action="{!uploadZip}" reRender="thePageBlock" />
+     
+    <apex:pageBlock id="thePageBlock" title="Factures">
+    
+        <apex:pageBlockButtons >
+            <apex:commandButton value="Afficher les factures" action="{!Show}" />
+        </apex:pageBlockButtons>
+        
+        <apex:pageMessages />
+    
+        <apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:selectRadio value="{!company}"><apex:selectOptions value="{!companies}"/></apex:selectRadio>
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem >
+                <apex:selectRadio value="{!origin}"><apex:selectOptions value="{!origins}"/></apex:selectRadio>
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem >
+                <apex:outputText value="Date de début"></apex:outputText>
+                <apex:inputfield value="{!emptyOrder.EffectiveDate}" />
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem >
+                <apex:outputText value="Date de fin"></apex:outputText>
+                <apex:inputfield value="{!emptyOrder.EndDate}" />  
+            </apex:pageBlockSectionItem>  
+        </apex:PageBlockSection>
+        
+        <apex:outputPanel rendered="{!filesShown}">
+            <apex:pageBlockTable value="{!files}" var="file">
+                 
+                <apex:column >
+                    <input type="checkbox" name="att_ids_group[]" value="{!file.Id}" checked="checked"/>
+                </apex:column>
+                <apex:column headerValue="title">
+                   <apex:outputlink value="/{!file.Id}">{!file.title}</apex:outputlink>
+                </apex:column>  
+                <apex:column value="{!file.VersionNumber}" />
+                <apex:column value="{!file.createdDate}" />
+                <apex:column value="{!file.ContentModifiedDate}" />
+            </apex:pageBlockTable>
+            
+            <div class="pagination">
+                <apex:commandButton value="Précédentes" action="{!Previous}" disabled="{!NOT(RenderPrevious)}" />
+                <span><apex:outputText value="{!CurrentPage}/{!MaxPage}" /></span>
+                <apex:commandButton value="Suivantes" action="{!Next}" disabled="{!NOT(RenderNext)}" />
+            </div>
+        </apex:outputPanel>
+    </apex:pageBlock>
+ 
+     <apex:outputPanel rendered="{!filesShown}">
+        <apex:outputLabel for="zipFileName" value="Nom du fichier: " />
+        <apex:inputText id="zipFileName" value="{!zipFileName}" />.zip
+         
+        <p>
+            <a id="generateZipLink" href="#">Générer l'archive</a>
+        </p>
+        <p>
+            <span>Statut: </span>
+            <span id="zipStatus"></span>
+        </p>
+     </apex:outputPanel>
+     
+</apex:form>
+ 
+</apex:page>

@@ -1,0 +1,7 @@
+<apex:page controller="exportExcel" action="{!exportToExcel}" readOnly="false" contentType="application/vnd.ms-excel#discounts.csv">{!header}
+    <apex:repeat value="{!listLstWrapper}" var="y">
+      <apex:repeat value="{!y}" var="x">
+          {!x.rowCounter },{!x.pricebookId },{!x.pricebookName },{!x.productId },{!x.productCode},{!x.rangeFrom },{!x.rangeTo }, {!x.discount }
+      </apex:repeat> 
+    </apex:repeat> 
+</apex:page>

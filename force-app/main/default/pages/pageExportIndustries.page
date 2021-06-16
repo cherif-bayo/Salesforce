@@ -1,0 +1,5 @@
+<apex:page controller="ExportIndustry" action="{!ExportIndustries}" readOnly="false" contentType="application/vnd.ms-excel#industries.csv">{!header}
+  <apex:repeat value="{!industries}" var="industry">
+      {!industry}
+  </apex:repeat> 
+</apex:page>

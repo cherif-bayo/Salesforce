@@ -1,0 +1,5 @@
+<apex:page controller="ExportSector" action="{!ExportSectors}" readOnly="false" contentType="application/vnd.ms-excel#sectors.csv">{!header}
+  <apex:repeat value="{!sectors}" var="sector">
+      {!sector}
+  </apex:repeat> 
+</apex:page>

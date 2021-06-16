@@ -1,0 +1,17 @@
+<apex:page standardController="Flexera_Key__c" extensions="CryptlexChangeExpirationExtension">
+      <apex:form > 
+        <apex:pageBlock title="Date d'expiration de la clé Cryptlex" mode="edit"> 
+            <apex:pageMessages id="messages" />
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Date d'expiration"></apex:outputLabel>
+                    <apex:inputField value="{!key.Date_limite__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Sauvegarder" action="{!save}" id="saveButton" />
+                <apex:commandButton value="Annuler" action="{!cancel}" id="cancelButton" />
+            </apex:pageBlockButtons> 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

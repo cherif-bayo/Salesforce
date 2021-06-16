@@ -1,0 +1,7 @@
+<apex:page standardController="Avoir__c" extensions="AvoirGenerationExtension_L" action="{!Generate}">
+    <apex:form >
+        <apex:pageBlock title="Générer le pdf de l'Avoir">
+            <apex:pageMessages />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

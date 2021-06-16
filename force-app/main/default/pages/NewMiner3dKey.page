@@ -1,0 +1,51 @@
+<apex:page standardController="CleMiner3D__c" extensions="Miner3dKeyExtension">
+	<apex:includeScript value="{!URLFOR($Resource.jQuery2, '/jquery-2.1.4.min.js')}"/>
+    <style>
+        .bPageBlock .detailList .labelCol {
+            width: 11%;
+        }
+        .bPageBlock .detailList .dataCol {
+           width: 22%;
+        }
+        .tableNoHeader{
+            width: 80% !important;
+        }
+        .tableNoHeader thead{
+            display: none;
+        }
+        .tableNoHeader tbody tr td:first-child{
+            width: 20px;
+        }
+    </style>
+    
+    <apex:form > 
+        <apex:pageBlock title="Clé Miner3D" mode="edit"> 
+            <apex:pageMessages id="messages" />
+            <apex:actionRegion >
+            <apex:pageblockSection columns="3" showHeader="true" title="Informations" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Solution"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Solution__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Nombre d'activations"></apex:outputLabel>
+                    <apex:inputField value="{!Key.NbActivations__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Date limite"></apex:outputLabel>
+                    <apex:inputField value="{!Key.DateLimite__c}" required="true" />
+                </apex:pageBlockSectionItem>  
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Propriétaire"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Proprietaire__c}" required="true" />
+                </apex:pageBlockSectionItem>            
+            </apex:pageblockSection>
+            </apex:actionRegion>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Sauvegarder" action="{!save}" id="saveButton" />
+                <apex:commandButton value="Annuler" action="{!cancel}" id="cancelButton" />
+            </apex:pageBlockButtons> 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

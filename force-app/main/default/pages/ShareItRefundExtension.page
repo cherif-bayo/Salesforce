@@ -1,0 +1,15 @@
+<apex:page standardController="Order" extensions="ShareItRefundExtension">
+    <apex:form >
+        <apex:pageBlock title="Refund">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Retour" action="/{!Order.Id}" />
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <apex:panelGrid columns="3" rendered="{!CanRefund}">
+                <apex:outputLabel >Etes-vous sûr de vouloir rembourser la commande?</apex:outputLabel>
+                <apex:commandButton value="Rembourser" action="{!Refund}" />
+                <apex:commandButton value="Annuler" action="/{!Order.Id}" />
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

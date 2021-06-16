@@ -1,0 +1,6 @@
+<apex:page controller="UpdateLastOrder">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!UpdateOrders}" value="Update frais share it last orders" />
+  </apex:form>
+</apex:page>

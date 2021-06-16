@@ -1,0 +1,9 @@
+<apex:page controller="FillTranslationsAdressesEN">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="4"> 
+                  <apex:commandButton value="Fill Adresses" action="{!FillAddresses}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+   </apex:form>
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page controller="UpdateOrderItemsExchangeRates">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!UpdateOrders}" value="Ajouter les taux" />
+  </apex:form>
+</apex:page>

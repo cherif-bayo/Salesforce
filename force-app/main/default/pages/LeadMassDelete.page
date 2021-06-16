@@ -1,0 +1,16 @@
+<apex:page standardController="Lead" recordSetVar="leads">
+   <apex:form >
+      <apex:pageBlock title="Edit Stage and Close Date" mode="edit">
+         <apex:pageMessages />
+         <apex:pageBlockTable value="{!leads}" var="opp">
+            <apex:column value="{!opp.Name}"/>
+            <apex:column headerValue="Email">
+               <apex:inputField value="{!opp.Email}"/>
+            </apex:column>
+            <apex:column headerValue="Phone">
+               <apex:inputField value="{!opp.Phone}"/>
+            </apex:column>
+         </apex:pageBlockTable>
+      </apex:pageBlock>
+   </apex:form>
+</apex:page>

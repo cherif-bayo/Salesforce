@@ -1,0 +1,20 @@
+<apex:page standardStylesheets="true" doctype="html-5.0" standardcontroller="Account" extensions="AccountOrdersFromContactsExtension">
+    <apex:form >
+      <apex:pageBlock mode="maindetail">
+        <apex:pageBlockTable value="{!orders}" var="order">  
+            <apex:column headerValue="Order Number">
+                <apex:commandLink value="{!order.OrderNumber}" action="/{!order.Id}" target="_parent" />
+            </apex:column>
+            <apex:column headerValue="Contact">
+                <apex:commandLink value="{!order.Client_final__r.Name}" action="/{!order.Client_final__r.Id}" target="_parent"/>
+            </apex:column>
+            <apex:column headerValue="Status">
+                <apex:outputText value="{!order.Status}"/>
+            </apex:column>
+            <apex:column headerValue="Order Amount After Discount">
+                <apex:outputText value="{!order.TotalAmountAfterDiscount__c}"/>
+            </apex:column>
+         </apex:pageBlockTable>
+     </apex:pageBlock>
+ </apex:form>
+</apex:page>

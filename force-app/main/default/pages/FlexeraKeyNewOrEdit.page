@@ -1,0 +1,213 @@
+<apex:page standardController="Flexera_Key__c" extensions="FlexeraKeysExtension" action="{!UpdateActivationsAllowed}"> 
+    <apex:includeScript value="{!URLFOR($Resource.jQuery2, '/jquery-2.1.4.min.js')}"/>
+
+    <style>
+        .bPageBlock .detailList .labelCol {
+            width: 11%;
+        }
+        .bPageBlock .detailList .dataCol {
+           width: 22%;
+        }
+        .tableNoHeader{
+            width: 80% !important;
+        }
+        .tableNoHeader thead{
+            display: none;
+        }
+        .tableNoHeader tbody tr td:first-child{
+            width: 20px;
+        }
+    </style>
+    
+    <script type="text/javascript">
+        var j$ = jQuery.noConflict();
+        
+        j$(document).ready(function(){
+            j$('[id*=select-license-type]').change(function(){
+                if(j$(this).val() == 'Perpétuelle'){
+                    j$('[id*=select-expiration] option[value!=Permanent]').hide();
+                    j$('[id*=select-expiration] option[value=Permanent]').prop('selected', true);
+                }else{
+                    j$('[id*=select-expiration] option[value!=Expiring]').hide();
+                    j$('[id*=select-expiration] option[value=Expiring]').prop('selected', true);
+                }
+            });
+        
+            j$('[id*=select-domain]').change(function(){
+                j$('[id*=select-license-type] option').show();
+                if(j$(this).val() == 'Student'){
+                    j$('[id*=select-license-type] option[value!=Annuelle]').hide();
+                    j$('[id*=select-license-type] option[value=Annuelle]').prop('selected', true);
+                }else if(j$(this).val() != 'Campus'){
+                    j$('[id*=select-license-type] option[value="Small Campus"]').hide();
+                    j$('[id*=select-license-type] option[value="Large Campus"]').hide();
+                    j$('[id*=select-license-type] option[value="Classroom"]').hide();
+                    if(j$('[id*=select-license-type]').val() == 'Small Campus' || j$('[id*=select-license-type]').val() == 'Large Campus' || j$('[id*=select-license-type]').val() == 'Classroom'){
+                        j$('[id*=select-license-type]').val('Annuelle');
+                        j$('[id*=select-license-type]').trigger('change');
+                    }          
+                }else if(j$(this).val() == 'Campus'){
+                    j$('[id*=select-license-type] option').hide();
+                    j$('[id*=select-license-type] option[value="Small Campus"]').show();
+                    j$('[id*=select-license-type] option[value="Large Campus"]').show();
+                    j$('[id*=select-license-type] option[value="Classroom"]').show();
+                    if(j$('[id*=select-license-type]').val() != 'Small Campus' && j$('[id*=select-license-type]').val() != 'Large Campus' && j$('[id*=select-license-type]').val() != 'Classroom'){
+                        j$('[id*=select-license-type]').val('Small Campus');
+                        j$('[id*=select-license-type]').trigger('change');
+                    } 
+                }
+            });
+            
+            j$('[id*=select-domain]').trigger('change');
+            j$('[id*=select-license-type]').trigger('change');
+        });
+    </script>
+
+    <apex:form > 
+        <apex:pageBlock title="Clé Flexera" mode="edit"> 
+            <apex:pageMessages id="messages" />
+            <apex:pageBlockSection columns="3" rendered="{!(!IsUpdate)}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Nombre de clés"></apex:outputLabel>
+                    <apex:inputText value="{!NbKeys}" style="width: 30px;" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem />
+            </apex:pageBlockSection>
+            <apex:actionRegion >
+            <apex:pageblockSection columns="3" showHeader="true" title="Informations" collapsible="false">
+                <apex:pageBlockSectionItem rendered="{!(!IsUpdate)}">
+                    <apex:outputLabel value="Date limite"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Date_limite__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!OR(HasOrder, IsFromAccount)}">
+                    <apex:outputLabel value="Type client"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Type_client__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!HasCampaign}" />
+                <apex:pageBlockSectionItem rendered="{!AND(NOT(IsUpdate), HasOrder)}">
+                    <apex:outputLabel value="Commande"></apex:outputLabel>
+                    <apex:outputText value="{!Order.OrderNumber}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!AND(NOT(IsUpdate), HasCampaign)}">
+                    <apex:outputLabel value="Campagne"></apex:outputLabel>
+                    <apex:outputText value="{!Campaign.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!AND(IsUpdate, HasCampaign)}">
+                    <apex:outputLabel value="Campagne"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Campaign__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Quantité achetée"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Quantity__c}">
+                        <apex:actionSupport event="onkeyup" reRender="nbActivationsAllowed" action="{!UpdateActivationsAllowed}" />
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Domaine utilisateur"></apex:outputLabel>
+                    <apex:inputField id="select-domain" value="{!Key.Domaine_utilisateur__c}">
+                        <apex:actionSupport event="onchange" reRender="nbActivationsAllowed, partCampus1, partCampus2" action="{!UpdateActivationsAllowed}" />
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!IsUpdate}">
+                    <apex:outputLabel value="Compte"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Account__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(IsUpdate)}" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Nombre d'activations possibles"></apex:outputLabel>
+                    <apex:inputField id="nbActivationsAllowed" value="{!Key.Nb_activations_allowed__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Type licence"></apex:outputLabel>
+                    <apex:inputField id="select-license-type" value="{!Key.Type_licence__c}">
+                        <apex:actionSupport event="onchange" reRender="nbActivationsAllowed, partCampus1, partCampus2" action="{!UpdateActivationsAllowed}" />
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Version"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Version__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />                
+                <apex:pageBlockSectionItem rendered="{!AND(IsUpdate, AND(NOT(HasCampaign), NOT(HasOrder)))}">
+                    <apex:outputLabel value="Campagne"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Campaign__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+            </apex:pageblockSection>
+            <apex:pageblockSection columns="3" showHeader="false" id="partCampus1">
+                <apex:pageBlockSectionItem rendered="{!RenderCheckboxesCampus}" />
+                <apex:pageBlockSectionItem rendered="{!RenderCheckboxesCampus}">
+                    <apex:outputLabel value="Est une campus réseau"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!IsCampusAndNetwork }" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!RenderCheckboxesCampus}" />
+            </apex:pageblockSection>
+           <apex:pageblockSection columns="3" showHeader="false" id="partCampus2">
+                <apex:pageBlockSectionItem rendered="{!RenderCheckboxesCampus2}" />
+                <apex:pageBlockSectionItem rendered="{!RenderCheckboxesCampus2}">
+                    <apex:outputLabel value="Avec une extension campus"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!GenerateExtensionCampus}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!RenderCheckboxesCampus2}" />
+            </apex:pageblockSection>
+            <apex:pageblockSection columns="3" showHeader="true" title="Relance à expiration" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Relance manuelle"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Relance_manuelle__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Date relance"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Date_relance__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            <apex:pageblockSection columns="3" showHeader="true" title="Informations Flexera" collapsible="false" id="pageBlockSolutions">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Solution"></apex:outputLabel>
+                    <apex:inputField value="{!Key.XLSTAT_Solution__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Options"></apex:outputLabel>
+                    <apex:inputField value="{!Key.XLSTAT_Options__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            </apex:actionRegion>
+            <apex:actionRegion rendered="{!HasOrder}">
+                <apex:pageblockSection id="contacts" columns="3" showHeader="true" title="Liste contacts" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Liste des contacts"></apex:outputLabel>
+                    <apex:pageBlockTable value="{!WpContacts}" var="wpContactKey" id="tableContacts" styleClass="tableNoHeader" columnsWidth="auto"> 
+                        <apex:column >
+                            <apex:image url="/img/msg_icons/confirm16.png" rendered="{!WpContacts[wpContactKey].IsAdded}" />
+                        </apex:column>
+                        <apex:column >
+                            <apex:commandLink action="/{!WpContacts[wpContactKey].Contact.Id}" target="_blank" value="{!WpContacts[wpContactKey].Contact.Name}"/>
+                        </apex:column>
+                        <apex:column style="width: 70px;">  
+                            <apex:commandButton id="btnAddOrRemoveContact" value="{!IF(WpContacts[wpContactKey].IsAdded,'Supprimer','Ajouter')}" action="{!AddOrRemoveContact}" rerender="tableContacts" rendered="{!RenderButtonRemoveContact}">
+                                <apex:param name="ContactId" value="{!WpContacts[wpContactKey].Contact.Id}" assignTo="{!SelectedContactId}"/>
+                            </apex:commandButton>    
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Ajouter un contact extérieur"></apex:outputLabel>
+                    <apex:inputField id="addcontact" value="{!TmpOrder.Contact_lie__c}">
+                        <apex:actionSupport event="onselect" reRender="tableContacts, addcontact" action="{!UpdateContacts}" />
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                </apex:pageblockSection> 
+            </apex:actionRegion>
+            <apex:pageblockSection columns="3" showHeader="true" title="Contact" collapsible="false" rendered="{!NOT(HasOrder)}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact"></apex:outputLabel>
+                    <apex:inputField value="{!Key.Contact__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection> 
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Sauvegarder" action="{!save}" id="saveButton" />
+                <apex:commandButton value="Annuler" action="{!cancel}" id="cancelButton" />
+            </apex:pageBlockButtons> 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

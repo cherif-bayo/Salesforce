@@ -1,0 +1,6 @@
+<apex:page controller="RemoveExchangesFraisShareItOrder">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!UpdateOrders}" value="Supprimer les taux" />
+  </apex:form>
+</apex:page>

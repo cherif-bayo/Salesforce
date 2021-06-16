@@ -1,0 +1,75 @@
+<apex:page standardController="Avoir__c" renderAs="pdf" showHeader="false" extensions="AvoirExtension" standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false">
+    <head>
+        <style>@page {size: {!IF(CountryCode == 'US', 'letter', 'A4')}}</style>
+        <apex:stylesheet value="{!URLFOR($Resource.Addinsoft_Css)}" />
+        <title>Credit note Nbr {!Avoir.Name}</title>
+    </head>
+    <body>
+        <!-- logo Addinsoft-->
+        <div><apex:image url="{!URLFOR($Resource.ADDINSOFT_LOGO)}"/></div>
+            
+        <!-- Addinsof Address and contacts -->
+        <div><ul>
+            <apex:repeat value="{!addinsoftCompanyLines}" var="line">
+                <li><apex:outputText value="{!line}" escape="false" /></li>
+            </apex:repeat>                        
+        </ul></div>
+
+        <!-- client address and contacts -->
+        <div class="float-right">
+            <ul>
+                <li>{!Avoir.AccountName__c}</li>
+                <li>{!Avoir.ContactName__c}</li>
+                <li><apex:outputText value="{!SUBSTITUTE(JSENCODE(Avoir.Commande_Lie__r.BillingStreet),'\r\n','<li></li>')}" escape="false" /></li>
+                <li>{!Avoir.Commande_Lie__r.BillingCity}&nbsp;{!State}&nbsp;{!Avoir.Commande_Lie__r.BillingPostalCode}</li>
+                <li>{!Country}</li>
+            </ul>
+        </div>
+
+        <!-- Avoir number and date -->
+        <div class="mt">
+            <ul>
+                <li><span class="m-bold">Credit note Nbr {!Avoir.FR_Credit_Code__c}</span></li>
+            </ul>
+            <p>Date:&nbsp;<apex:outputText value="{0,date,yyyy-MM-dd}"><apex:param value="{!Avoir.CreatedDate}" /></apex:outputText></p>          
+        </div>      
+
+        <!-- Reference de facture -->
+        <apex:outputPanel rendered="{!Avoir.Facture_liee__c <> null}" layout="none">This credit note cancels your invoice: {!Avoir.Facture_liee__r.FR_Invoice_Code__c}<br/></apex:outputPanel>
+
+        <!-- Lignes de produits --> 
+        <div class="mt border-top"><table class="table-produits">
+            <thead><tr>
+                    <th>Product</th>
+                    <th>User type</th>
+                    <th>License type</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Amount</th>
+            </tr></thead>
+            <tbody>
+                <apex:variable value="{!1}" var="i"/>
+                <apex:repeat value="{!orderItems}" var="orderItem">
+                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};">
+                    <td>{!orderItem.PricebookEntry.Product2.Libelle_Devis__c}</td>
+                    <td>{!orderItem.PricebookEntry.Product2.Domaine_utilisateur_en__c}</td>
+                    <td>{!orderItem.PricebookEntry.Product2.Type_licence_desc_EN__c}</td>
+                    <td><apex:outputText value="{0, number, integer}"><apex:param value="{!orderItem.quantity}" /></apex:outputText></td>
+                    <td>{!orderItem.UnitPriceWithCurrency__c}</td>                    
+                    <td align="right">{!orderItem.TotalPriceAfterDiscountWithCurrency__c}</td>
+                </tr>
+                <apex:variable value="{!i+1}" var="i" />
+                </apex:repeat>
+                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="7">&nbsp;</td></tr>
+                <tr style="background-color:{!IF(mod(i+1,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="7">&nbsp;</td></tr>
+                <tr><td colspan="7">&nbsp;</td></tr>
+                <apex:variable var="foo" value="bar" rendered="{!hasTVA}"><tr><td align="right" colspan="7">TOTAL H.T. : {!Avoir.Facture_liee__r.Commande_lie__r.TotalAmountAfterDiscountWithCurrency__c}</td></tr></apex:variable>
+                <apex:variable var="foo" value="bar" rendered="{!hasTVA}"><tr><td align="right" colspan="7">TVA ({!Avoir.Facture_liee__r.TVA__c} %) : {!Avoir.Facture_liee__r.AmountTVAWithCurrency__c}</td></tr></apex:variable>
+                <tr><td align="right" colspan="7"><span class="m-bold">TOTAL: {!Avoir.Facture_liee__r.TotalAmountAfterTVAWithCurrency__c}</span></td></tr>
+            </tbody>
+        </table></div>
+
+        <!-- Footer : Thanks -->    
+        <div class="footer"><p class="underline-orange mt">Thank you for choosing our products</p></div>
+    </body>
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page controller="MontantProductFamilyToOrder">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!AddMontantToOrder}" value="Add Montant Orders" />
+  </apex:form>
+</apex:page>

@@ -1,0 +1,5 @@
+<apex:page controller="exportExcelStandardPricesInsert" action="{!exportToExcel}" readOnly="false" contentType="application/vnd.ms-excel#prices.csv">{!header}
+      <apex:repeat value="{!lstwrapper}" var="x">
+          {!x.pricebookId}, {!x.productId}, {!x.productCode},{!x.productPrice}, {!x.productCurrency},{!x.IsActive}
+      </apex:repeat> 
+</apex:page>

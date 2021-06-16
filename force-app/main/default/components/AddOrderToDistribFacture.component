@@ -1,0 +1,54 @@
+<apex:component controller="AddOrderToDistribFacture" allowDML="true">
+  <apex:pageBlock mode="edit" title="Commandes">
+    <apex:pageBlockButtons >
+        <apex:commandButton action="{!AddOrders}" value="Ajouter"/> 
+        <apex:commandButton action="{!Cancel}" value="Annuler"/>           
+    </apex:pageBlockButtons>
+    
+    <apex:pageMessages />
+    
+    <apex:pageBlockTable id="table" value="{!WrapperOrders}" var="wrapperOrder">
+    
+        <apex:column headervalue="Selectionner">   
+            <apex:facet name="header">
+                <apex:outputPanel >
+                 <apex:commandButton value="Tous" action="{!SelectAlll}" rerender="table" />
+                 <apex:commandButton value="Aucun" action="{!DeSelectAlll}" rerender="table" />
+              </apex:outputPanel>
+              </apex:facet>
+           <apex:inputCheckbox value="{!wrapperOrder.IsChecked}" />   
+        </apex:column>  
+        
+        <apex:column headervalue="Numéro">      
+           <apex:commandLink value="{!wrapperOrder.Order.OrderNumber}" action="/{!wrapperOrder.Order.Id}" />   
+        </apex:column>  
+        
+        <apex:column headervalue="Date">      
+            <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                <apex:param value="{!wrapperOrder.Order.EffectiveDate}" /> 
+            </apex:outputText>
+        </apex:column>
+        
+        <apex:column headervalue="Statut">      
+           <apex:outputText value="{!wrapperOrder.Order.Status}" />   
+        </apex:column>  
+        
+        <apex:column headervalue="Nom client">      
+            <apex:commandLink value="{!wrapperOrder.Order.Client_Final__r.Name}" action="/{!wrapperOrder.Order.Client_Final__r.Id}" />
+        </apex:column>  
+        
+        <apex:column headervalue="Email client">      
+           <apex:outputText value="{!wrapperOrder.Order.Client_final_email__c}" />   
+        </apex:column>  
+        
+        <apex:column headervalue="Provenance">      
+           <apex:outputText value="{!wrapperOrder.Order.Provenance__c}" />   
+        </apex:column>
+        
+        <apex:column headervalue="Montant total">      
+           <apex:outputText value="{!wrapperOrder.Order.TotalAmountAfterDiscountWithCurrency__c}" />   
+        </apex:column>
+
+    </apex:pageBlockTable>
+   </apex:pageBlock>
+</apex:component>

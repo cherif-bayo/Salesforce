@@ -1,0 +1,5 @@
+<apex:page standardController="stripe_payouts__c" extensions="ExportStripeCreditNotesExtension" action="{!exportToExcel}" readOnly="false" contentType="application/vnd.ms-excel#creditnotes.csv">{!header}
+    <apex:repeat value="{!rows}" var="r">
+          {!r.Created_UTC};{!r.customer_facing_amount};{!r.customer_facing_currency};{!r.gross};{!r.fee};{!r.net};{!r.avoir};{!r.numoJPA}
+    </apex:repeat> 
+</apex:page>

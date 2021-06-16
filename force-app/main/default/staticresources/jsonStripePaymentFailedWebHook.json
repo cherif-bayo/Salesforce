@@ -1,0 +1,225 @@
+{
+  "id": "evt_1I0oUiDlc4BISCKmZxisnAk5",
+  "object": "event",
+  "api_version": "2020-08-27",
+  "created": 1608557532,
+  "data": {
+    "object": {
+      "id": "pi_1I0oSTDlc4BISCKmBf6QxkTZ",
+      "object": "payment_intent",
+      "amount": 88800,
+      "amount_capturable": 0,
+      "amount_received": 0,
+      "application": null,
+      "application_fee_amount": null,
+      "canceled_at": null,
+      "cancellation_reason": null,
+      "capture_method": "automatic",
+      "charges": {
+        "object": "list",
+        "data": [
+          {
+            "id": "ch_1I0oUhDlc4BISCKmTg8hjHQM",
+            "object": "charge",
+            "amount": 88800,
+            "amount_captured": 0,
+            "amount_refunded": 0,
+            "application": null,
+            "application_fee": null,
+            "application_fee_amount": null,
+            "balance_transaction": null,
+            "billing_details": {
+              "address": {
+                "city": null,
+                "country": null,
+                "line1": null,
+                "line2": null,
+                "postal_code": "33000",
+                "state": null
+              },
+              "email": null,
+              "name": "Eric Le Bihen",
+              "phone": null
+            },
+            "calculated_statement_descriptor": "XLSTAT",
+            "captured": false,
+            "created": 1608557531,
+            "currency": "usd",
+            "customer": "cus_xxx",
+            "description": null,
+            "destination": null,
+            "dispute": null,
+            "disputed": false,
+            "failure_code": "card_declined",
+            "failure_message": "Your card has insufficient funds.",
+            "fraud_details": {
+            },
+            "invoice": null,
+            "livemode": false,
+            "metadata": {
+              "order_id": "2",
+              "salesforce_order_id": "XXXXX"
+            },
+            "on_behalf_of": null,
+            "order": null,
+            "outcome": {
+              "network_status": "declined_by_network",
+              "reason": "insufficient_funds",
+              "risk_level": "normal",
+              "risk_score": 13,
+              "seller_message": "The bank returned the decline code `insufficient_funds`.",
+              "type": "issuer_declined"
+            },
+            "paid": false,
+            "payment_intent": "pi_1I0oSTDlc4BISCKmBf6QxkTZ",
+            "payment_method": "pm_1I0oUhDlc4BISCKmd0Gqfrv6",
+            "payment_method_details": {
+              "card": {
+                "brand": "visa",
+                "checks": {
+                  "address_line1_check": null,
+                  "address_postal_code_check": "pass",
+                  "cvc_check": "pass"
+                },
+                "country": "US",
+                "exp_month": 3,
+                "exp_year": 2021,
+                "fingerprint": "LDxVR8GIvCTMum0s",
+                "funding": "credit",
+                "installments": null,
+                "last4": "9995",
+                "moto": null,
+                "network": "visa",
+                "three_d_secure": null,
+                "wallet": null
+              },
+              "type": "card"
+            },
+            "receipt_email": null,
+            "receipt_number": null,
+            "receipt_url": null,
+            "refunded": false,
+            "refunds": {
+              "object": "list",
+              "data": [
+              ],
+              "has_more": false,
+              "total_count": 0,
+              "url": "/v1/charges/ch_1I0oUhDlc4BISCKmTg8hjHQM/refunds"
+            },
+            "review": null,
+            "shipping": null,
+            "source": null,
+            "source_transfer": null,
+            "statement_descriptor": null,
+            "statement_descriptor_suffix": null,
+            "status": "failed",
+            "transfer_data": null,
+            "transfer_group": null
+          }
+        ],
+        "has_more": false,
+        "total_count": 1,
+        "url": "/v1/charges?payment_intent=pi_1I0oSTDlc4BISCKmBf6QxkTZ"
+      },
+      "client_secret": "pi_1I0oSTDlc4BISCKmBf6QxkTZ_secret_JoVQwY3VOGE1hg7RqsJokGJpH",
+      "confirmation_method": "automatic",
+      "created": 1608557393,
+      "currency": "usd",
+      "customer": "cus_xxx",
+      "description": null,
+      "invoice": null,
+      "last_payment_error": {
+        "charge": "ch_1I0oUhDlc4BISCKmTg8hjHQM",
+        "code": "card_declined",
+        "decline_code": "lost_card",
+        "doc_url": "https://stripe.com/docs/error-codes/card-declined",
+        "message": "Your card has insufficient funds.",
+        "payment_method": {
+          "id": "pm_1I0oUhDlc4BISCKmd0Gqfrv6",
+          "object": "payment_method",
+          "billing_details": {
+            "address": {
+              "city": null,
+              "country": null,
+              "line1": null,
+              "line2": null,
+              "postal_code": "33000",
+              "state": null
+            },
+            "email": null,
+            "name": "Eric Le Bihen",
+            "phone": null
+          },
+          "card": {
+            "brand": "visa",
+            "checks": {
+              "address_line1_check": null,
+              "address_postal_code_check": "pass",
+              "cvc_check": "pass"
+            },
+            "country": "US",
+            "exp_month": 3,
+            "exp_year": 2021,
+            "fingerprint": "LDxVR8GIvCTMum0s",
+            "funding": "credit",
+            "generated_from": null,
+            "last4": "9995",
+            "networks": {
+              "available": [
+                "visa"
+              ],
+              "preferred": null
+            },
+            "three_d_secure_usage": {
+              "supported": true
+            },
+            "wallet": null
+          },
+          "created": 1608557531,
+          "customer": "cus_xxx",
+          "livemode": false,
+          "metadata": {
+          },
+          "type": "card"
+        },
+        "type": "card_error"
+      },
+      "livemode": false,
+      "metadata": {
+        "order_id": "2",
+        "salesforce_order_id": "XXXXX"
+      },
+      "next_action": null,
+      "on_behalf_of": null,
+      "payment_method": null,
+      "payment_method_options": {
+        "card": {
+          "installments": null,
+          "network": null,
+          "request_three_d_secure": "automatic"
+        }
+      },
+      "payment_method_types": [
+        "card"
+      ],
+      "receipt_email": null,
+      "review": null,
+      "setup_future_usage": "off_session",
+      "shipping": null,
+      "source": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "requires_payment_method",
+      "transfer_data": null,
+      "transfer_group": null
+    }
+  },
+  "livemode": false,
+  "pending_webhooks": 3,
+  "request": {
+    "id": "req_bmbXLckY8C4ON3",
+    "idempotency_key": null
+  },
+  "type": "payment_intent.payment_failed"
+}

@@ -1,0 +1,27 @@
+<apex:page controller="OrderUnpaidEmailController">
+<apex:form > 
+    <apex:pageBlock title="Relances">
+        <apex:pageMessages id="messages" />
+            <apex:pageBlockTable value="{!relancesWithDependencies}" var="relanceWithDependencies" id="theTable" rowClasses="odd,even" styleClass="tableClass">
+                <apex:column >
+                    <apex:facet name="header">Commande</apex:facet>
+                    <apex:outputText value="{!relanceWithDependencies.Order.OrderNumber}"/>
+                </apex:column>
+        
+                <apex:column >
+                    <apex:facet name="header">Relance</apex:facet>
+                    <apex:outputText value="{!relanceWithDependencies.Relance.Name}"/>
+                </apex:column>
+                
+                <apex:column >
+                    <apex:facet name="header">Emails</apex:facet>
+                    <apex:outputText value="{!relanceWithDependencies.Emails}"/>
+                </apex:column>
+        
+            </apex:pageBlockTable>
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{!Send}" value="Envoyer" />
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+</apex:form>
+</apex:page>

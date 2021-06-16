@@ -1,0 +1,90 @@
+<apex:page controller="discountController" tabStyle="Discount_Details__tab">
+    <apex:form >
+        <apex:pageBlock title="Generation">
+            <apex:commandButton value="Update Standard Prices" action="{!updatePrices}" onclick="window.open('apex/csvPricesProduct');" />
+            <br></br>
+            <br></br>
+            <apex:commandButton value="Insert Standard Prices" action="{!insertPrices}" onclick="window.open('apex/csvPricesProductInsert');" />  
+            <br></br>
+            <br></br>          
+            <apex:commandButton value="Generate Discounts" action="{!generateCSV}" onClick="window.open('apex/csvDiscountPage?pricebookId={!selectedPricebook2Id}');" />
+            <br></br>
+            <br></br>
+            <apex:commandButton value="Export Discounts" action="{!exportCSV}" onClick="window.open('apex/CSVDiscountsExportPage?pricebookId={!selectedPricebook2Id}');" />
+            <br></br>
+            <br></br>          
+            <apex:commandButton value="Delete bad pricebook entries (by currency ISO code)" action="{!deletePricebookEntriesNotGoodCurrencyByPricebookEntryId}" />
+        </apex:pageBlock>
+        <apex:pageBlock title="Pricebooks">
+            <apex:selectList value="{!selectedPricebook2Id}" multiselect="false" size="1">
+                <apex:selectOptions value="{!items}"/>
+            </apex:selectList>
+            <apex:commandButton value="Choose" action="{!choosePricebook}" rerender="tablePricebookEntries, tableAddProducts"/>
+            <!--<apex:pageBlockTable id="tableAddProducts" value="{!productsToAdd}" var="product" rowClasses="odd,even" styleClass="tableClass">
+                <apex:column headerValue="">
+                    <apex:inputCheckbox value="{!product.checked}" />
+                </apex:column>
+                <apex:column headerValue="Name">
+                    <apex:outputText value="{!product.p.Name }"/>
+                </apex:column>
+                <apex:column headerValue="Code">
+                    <apex:outputText value="{!product.p.ProductCode }"/>
+                </apex:column>
+                <apex:column headerValue="Code">
+                    <apex:outputText value="{!product.p.AyPrice__List_Price__c}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton value="Add products" action="{!addProductsChecked}" rerender="tableAddProducts, tablePricebookEntries" />-->
+        </apex:pageBlock>
+        <apex:pageBlock id="tablePricebookEntries" title="Products">
+            <apex:pageBlockTable value="{!pricebookEntries}" var="entry" rowClasses="odd,even" styleClass="tableClass">
+                <apex:column headerValue="">
+                    <apex:inputCheckbox value="{!entry.checked}" />
+                </apex:column>
+                <apex:column headerValue="Name">
+                    <apex:outputText value="{!entry.pe.Product2.name }"/>
+                </apex:column>
+                <apex:column headerValue="Code">
+                    <apex:outputText value="{!entry.pe.ProductCode}"/>
+                </apex:column>
+                <apex:column headerValue="Tiers">
+                    <apex:outputText value="{!entry.pe.AyPrice__Tiers__c}"/>
+                </apex:column>
+                <apex:column headerValue="Use Standard Price">
+                    <apex:inputCheckbox value="{!entry.pe.UseStandardPrice}"/>
+                </apex:column>
+                <apex:column headerValue="Unit Price">
+                    <apex:outputText value="{!entry.pe.UnitPrice}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:commandButton value="Show discounts" action="{!choosePricebookEntry}" rerender="discountDetails">
+                        <apex:param name="selectedPricebookId" value="{!entry.pe.Pricebook2.id}" assignTo="{!selectedPricebookId}"/>
+                        <apex:param name="selectedProductId" value="{!entry.pe.Product2.id}" assignTo="{!selectedProductId}"/>
+                    </apex:commandButton>
+                </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton value="Delete products" action="{!deletePricebookEntries}" rerender="tablePricebookEntries, tableAddProducts, discountDetails" />
+        </apex:pageBlock>
+        <apex:pageBlock id="discountDetails" title="Details discount">
+            <apex:pageBlockTable value="{!discountDetails}" var="discount" rowClasses="odd,even" styleClass="tableClass">
+                <apex:column headerValue="From">
+                    <apex:inputText value="{!discount.AyPrice__Range_From__c}"/>
+                </apex:column>
+                <apex:column headerValue="To">
+                    <apex:inputText value="{!discount.AyPrice__Range_To__c}"/>
+                </apex:column>
+                <apex:column headerValue="Price after discount">
+                    <apex:inputText value="{!discount.Price_After_Discount__c}"/>
+                </apex:column>
+                <apex:column >
+                    <apex:commandButton value="Remove discount" action="{!removeDiscountDetail}" rerender="discountDetails, tablePricebookEntries">
+                        <apex:param name="selectedDiscountDetailToRemoveId" value="{!discount.id}" assignTo="{!selectedDiscountDetailToRemoveId}"/>
+                    </apex:commandButton>
+                </apex:column>
+            </apex:pageBlockTable>
+            <apex:commandButton value="Add" action="{!addDiscountDetail}" rerender="discountDetails, tablePricebookEntries" />
+            <apex:commandButton value="Save" action="{!updateDiscountDetails}" rerender="discountDetails, tablePricebookEntries" />
+            <apex:commandButton value="Delete all" action="{!deleteDiscounts}" rerender="discountDetails, tablePricebookEntries" />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

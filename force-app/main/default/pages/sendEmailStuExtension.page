@@ -1,0 +1,7 @@
+<apex:page standardController="Order" extensions="SendEmailStuExtension" action="{!SendEmail}">
+    <apex:form >
+        <apex:pageBlock title="Envoie email preuve STU">
+            <apex:pageMessages />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

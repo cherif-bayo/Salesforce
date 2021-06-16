@@ -1,0 +1,37 @@
+<apex:page controller="AvoirToOrderController"> 
+    <apex:form > 
+        <apex:pageBlock title="Avoir" mode="edit"> 
+            <apex:pageMessages id="messages" />
+            <apex:pageBlockSection columns="1" rendered="{!NoError}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Retirer du montant de la commande"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!Avoir.Impact_Order_Price__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Libellé"></apex:outputLabel>
+                    <apex:inputField value="{!Avoir.Libelle__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Montant"></apex:outputLabel>
+                    <apex:inputField value="{!Avoir.Montant__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Affichage Nom Adresse"></apex:outputLabel>
+                    <apex:inputField value="{!Avoir.Affichage_Nom_du_compte__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Facture"></apex:outputLabel>
+                    <apex:inputField value="{!Avoir.Facture_liee__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Facture distributeur"></apex:outputLabel>
+                    <apex:inputField value="{!Avoir.Facture_distrib_liee__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons rendered="{!NoError}">
+                <apex:commandButton value="Ajouter" action="{!Save}" />
+                <apex:commandButton value="Annuler" action="{!Cancel}" />
+            </apex:pageBlockButtons> 
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

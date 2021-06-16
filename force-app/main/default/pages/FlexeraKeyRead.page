@@ -1,0 +1,73 @@
+<apex:page standardController="Flexera_Key__c" extensions="FlexeraKeysExtension" action="{!GetFlexeraInformationsFromRead}"> 
+    <style>
+        .bPageBlock .detailList .labelCol {width: 11%;}
+        .bPageBlock .detailList .dataCol {width: 22%;}
+        .tableNoHeader{width: 50% !important;}
+        .tableNoHeader thead{display: none;}
+        .tableNoHeader tbody tr td:first-child{width: 20px;}
+    </style>
+    <apex:form > 
+        <apex:pageBlock title="Clé CryptLex">             
+            <apex:pageMessages id="messages" />
+            <!-- Alerte en cas d'incohérence d'activation entre Cryptlex et  Salesforce -->
+            <apex:pageblockSection columns="3" showHeader="false" collapsible="false" rendered="{!AND(ResultInformations.IsInactive, Key.Is_Inactive__c)}">
+                <apex:outputText value="Clef désactivée" style="font-size: 15px; color: #a94442; font-weight: bold;" />
+            </apex:pageblockSection>
+            <!-- Informations Cryptlex -->
+            <apex:pageblockSection columns="3" showHeader="true" title="INFOS DANS CRYPTLEX" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Date d'expiration"></apex:outputLabel>
+                    <apex:outputText value="{0, date, dd/MM/yyyy}">
+                        <apex:param value="{!ResultInformations.ExpirationDate}" /> 
+                    </apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Nb d'activations maximales"></apex:outputLabel>
+                    <apex:outputText value="{!ResultInformations.Quantity}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Nb d'activations en cours"></apex:outputLabel>
+                    <apex:outputText value="{!ResultInformations.QuantityActivated}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Entitlement Id"></apex:outputLabel>
+                    <apex:outputLink target="_blank" value="https://app.cryptlex.com/licenses/{!ResultInformations.EntitlementId}">{!ResultInformations.EntitlementId}</apex:outputLink>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Modèle de licence"></apex:outputLabel>
+                    <apex:outputText value="{!ResultInformations.LicenseModel}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Produits"></apex:outputLabel>
+                    <apex:outputText value="{!ResultInformations.Products}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Active"></apex:outputLabel>
+                    <apex:outputText value="{! !ResultInformations.IsInactive}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=" Nb Désactivations"></apex:outputLabel>
+                    <apex:outputText value="{!ResultInformations.totalDeactivations}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+            <!-- Liste des contacts associés à la clé -->
+            <apex:pageblockSection columns="3" showHeader="true" title="CONTACTS ASSOCIES" collapsible="false" rendered="{!HasOrder}">
+                <apex:pageBlockTable value="{!WpContacts}" var="wpContactKey" id="tableContacts" styleClass="tableNoHeader" columnsWidth="auto"> 
+                    <apex:column >
+                        <apex:image url="/img/msg_icons/confirm16.png" rendered="{!WpContacts[wpContactKey].IsAdded}" />
+                    </apex:column>
+                    <apex:column >
+                        <apex:commandLink action="/{!WpContacts[wpContactKey].Contact.Id}" target="_blank" value="{!WpContacts[wpContactKey].Contact.Name}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageblockSection> 
+            <!-- Contact Principal affiché si pas de liste de contacts associés à la commande  -->
+            <apex:pageblockSection columns="3" showHeader="true" title="CONTACTS ASSOCIES" collapsible="false" rendered="{!NOT(HasOrder)}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact"></apex:outputLabel>
+                    <apex:commandLink action="/{!MainContact.Contact.Id}" target="_blank" value="{!MainContact.Contact.Name}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection> 
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

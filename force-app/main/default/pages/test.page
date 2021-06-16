@@ -1,0 +1,14 @@
+<apex:page standardController="Order">
+<apex:form >
+<apex:pageBlock >
+<apex:pageBlockSection title="Installation" > 
+    <apex:inputField label="Label-1" value="{!Order.Status}" />
+    <apex:inputField label="Label-2" value="{!Order.Status}" />
+    <apex:outputLabel value="List Label:"/>
+    <apex:selectList value="{!Order.Status}" size="1" />
+    <apex:inputField label="Label-3" value="{!Order.Status}" />
+    <apex:inputField label="Label-4" value="{!Order.Status}" />
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

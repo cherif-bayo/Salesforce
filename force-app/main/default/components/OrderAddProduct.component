@@ -1,0 +1,88 @@
+<apex:component controller="OrderControllerPersonnalise" allowDML="true">
+
+<apex:attribute name="Render" type="Boolean" required="true" assignTo="{!RenderDiscountAndProducts}" description="Show component" />
+<apex:attribute name="Domain" type="String" required="true" assignTo="{!SelectedDomaine}" description="Selected domain" />
+<apex:attribute name="Licences" type="SelectOption[]" required="true" assignTo="{!LicenceList}" description="Licences on selected domain" />
+<apex:attribute name="Order" type="Order" required="true" assignTo="{!MyOrder}" description="Order" />
+<apex:attribute name="Account" type="Account" required="true" assignTo="{!PersonAccount}" description="Selected or created account" />
+<apex:attribute name="OrderItems" type="WrapProductOrderItem[]" required="true" assignTo="{!ProductsOrderItems}" description="Order items added" />
+<apex:attribute name="Licence" required="true" type="String" assignTo="{!LicenceSelected}" description="Selected licence" />
+<apex:attribute name="Curr" required="true" type="String" assignTo="{!CurrencyIsoCode}" description="order currency" />
+
+<apex:pageBlockSection id="RefreshTable" title="Ajout Produits" columns="1"  rendered="{!RenderDiscountAndProducts}" showHeader="{!RenderLicenceSelection}">
+    <apex:pageBlockSectionItem rendered="{!RenderLicenceSelection}">
+          <apex:outputText value="Type de licence : "/>
+          <apex:selectList size="1" value="{!SelectedLicence}">
+               <apex:selectOptions value="{!LicenceList}"/>
+               <apex:actionsupport event="onchange" action="{!Refresh}" rerender="RefreshTable,btnAddLicence" />
+          </apex:selectList>
+          </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem rendered="{!RenderLicenceSelection}"><apex:outputText value="Anciens Produits"></apex:outputText>
+            <apex:inputCheckbox value="{!IsOldProductSelected}">
+                <apex:actionSupport event="onchange" action="{!Refresh}" rerender="RefreshAll"/>
+            </apex:inputCheckbox>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockTable value="{!wrapProductList}" var="prodWrap" rendered="{!AND(wrapProductList.size > 0, NoRenderListProductsParam)}">
+              <apex:column >
+              <apex:inputCheckbox value="{!prodWrap.isSelected}">
+              </apex:inputCheckbox>
+              </apex:column>
+              <apex:column value="{!prodWrap.prod.Name}" headerValue="Nom Produit" />
+              <apex:column value="{!prodWrap.prod.ProductCode}" headerValue="Code Produit" />
+              <apex:column value="{!prodWrap.prod.Type_licence_desc_EN__c}" headerValue="Type de Licence" />
+              <apex:column value="{!prodWrap.prod.Domaine_utilisateur_en__c}" headerValue="Domaine Utilisateur" />
+              <apex:column value="{!prodWrap.UnitPrice}" headerValue="Prix unitaire" />              
+            </apex:pageBlockTable>
+            
+            <apex:pageBlockSectionItem id="btnAddLicence">
+                  <apex:commandButton rendered="{!NoRenderListProductsParam}" value="Ajouter produits" action="{!AddLicence}" rerender="RefreshTable,btnValider" />
+              </apex:pageBlockSectionItem>
+            
+            <!-- Deuxième tableau concernant les différents produits commandés -->
+            <apex:outputText value="Produits commandés : " style="font-weight:bold;" rendered="{!ProductsOrderItems.size > 0}"/>
+            <apex:pageBlockTable value="{!ProductsOrderItems}" var="wrap" rendered="{!ProductsOrderItems.size > 0}">
+            
+              <apex:column headerValue="Action">
+                  <apex:commandLink action="{!Remove}" rerender="RefreshTable"><apex:param assignTo="{!rowid}" value="{!wrap.Product.Id}" name="assignvalue" /> Remove</apex:commandLink>
+                  
+              </apex:column>
+              <apex:column value="{!wrap.Product.Name}" headerValue="Nom Produit" />
+              <apex:column value="{!wrap.Product.Domaine_utilisateur_en__c}" headerValue="Domaine Utilisateur" />
+              <apex:column value="{!wrap.Product.Type_licence_desc_EN__c}" headerValue="Type Licence" />
+            
+              <apex:column headerValue="Quantité">
+              <apex:inputText value="{!wrap.OrderItem.Quantity}">
+                  <apex:actionsupport event="onchange" action="{!UpdateDiscount}" rerender="RefreshTable">
+                      <apex:param assignTo="{!rowid}" value="{!wrap.Product.Id}" name="assignvalue" />
+                  </apex:actionsupport>
+              </apex:inputText>
+              </apex:column>
+              <apex:column headerValue="Prix Unitaire">
+              <apex:inputText value="{!wrap.OrderItem.UnitPrice}">
+                  <apex:actionsupport event="onchange" action="{!UpdateDiscount}" rerender="RefreshTable">
+                      <apex:param assignTo="{!rowid}" value="{!wrap.Product.Id}" name="assignvalue" />
+                  </apex:actionsupport>
+              </apex:inputText>
+              </apex:column>
+              <apex:column headerValue="Prix Unitaire Catalogue">
+                  <apex:outputText value="{!wrap.OrderItem.Unit_Price_Catalogue__c}"></apex:outputText>
+              </apex:column>
+              <apex:column value="{!wrap.TotalPrice}" headerValue="Prix Total entré" />
+              <apex:column value="{!wrap.OrderItem.Percent_Discount_Client__c}" headerValue="% Discount Client" />
+              <apex:column value="{!wrap.OrderItem.Percent_Discount_Coupon__c}" headerValue="% Discount Coupon" />
+              <apex:column value="{!wrap.OrderItem.Percent_Discount_Manuel__c}" headerValue="% Discount Manuel" />
+              <apex:column value="{!wrap.OrderItem.Percent_Discount_Total__c}" headerValue="% Discount Total">
+                  <apex:facet name="footer">column footer <apex:outputText value="Total de la commande"></apex:outputText></apex:facet>
+              </apex:column>
+              <apex:column headerValue="Prix Total Après Discount">
+                  <apex:outputText value="{!wrap.OrderItem.Total_Price_After_Discount__c }"></apex:outputText>
+              <apex:facet name="footer">column footer <apex:outputText value="{!TotalPriceOrder}"></apex:outputText></apex:facet>
+              </apex:column>
+            </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:outputPanel id="btnValider" >
+<apex:commandButton value="Valider" style="margin-left:35%; width:20%; line-height:200%;" action="{!Valider}" rendered="{!AND(RenderLicenceSelection, IF(ProductsOrderItems.size > 0, true, false))}"/>
+</apex:outputPanel>
+            </apex:component>

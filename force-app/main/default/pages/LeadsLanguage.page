@@ -1,0 +1,6 @@
+<apex:page controller="LeadsLanguage">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!ChangeLanguage}" value="Change language leads" />
+  </apex:form>
+</apex:page>

@@ -1,0 +1,151 @@
+@page {
+    size: A4;
+    margin: 15mm 15mm 30mm 15mm;
+
+    @bottom-left {
+        content: element(footer);
+    }
+}
+
+body {
+    font-size: 9pt;
+    font-family: sans-serif;
+}
+
+/*
+This for japanese and chec characters
+body {
+    font-size: 9pt;
+    font-family: Arial Unicode MS !important;
+}
+*/
+
+.float-right {
+    margin-left: 100mm;
+}
+
+.m-bold {
+    font-weight: bold;
+}
+
+.l-orange {
+    color: #222154;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.underline-orange {
+    border-bottom: 1pt solid #222154;
+    border-left: 1pt solid #222154;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 2mm;
+    color: #222154;
+}
+
+.mt {
+    margin-top: 3mm;
+}
+
+.mt-2 {
+    margin-top: 10mm;
+}
+
+.mt-4 {
+    margin-top: 40mm;
+}
+
+.mb-2 {
+    margin-bottom: 10mm;
+}
+
+.border-top {
+    border-top: 1pt solid #222154;
+    padding-top: 10mm;
+    margin-top: 10mm;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.table-produits,
+.table-produits tr,
+.table-produits tbody td,
+.table-produits thead th {
+    border: none;
+}
+
+.table-produits thead th,
+.table-produits tbody td {
+    padding: 2px 15px;
+}
+
+.table-produits {
+    width: 100%;
+}
+
+.table-produits thead th {
+    font-weight: bold;
+    border-bottom: 1pt solid #C9C9C9;
+}
+
+.column-1 {
+    display: inline-block;
+    width: 80mm;
+    vertical-align: middle;
+    margin-top: 10mm;
+    padding-right: 5mm;
+}
+
+.column-1-jp {
+    display: inline-block;
+    width: 105mm;
+    vertical-align: top;
+    margin-top: 10mm;
+    padding-right: 5mm;
+}
+
+.column-2-jp {
+    display: inline-block;
+    width: 60mm;
+    vertical-align: top;
+    margin-top: 10mm;
+}
+
+.column-2 {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 10mm;
+}
+
+.column-1l {
+    display: inline-block;
+    width: 110mm;
+    vertical-align: middle;
+    margin-top: 10mm;
+    padding-right: 20mm;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+div.footer {
+    position: running(footer);
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.column-right {
+    margin-left: 130mm;
+    border-bottom: 1pt solid #C9C9C9;
+}
+
+Quicklinks Profiles Chamber Quick Console Home Quick Query Execute Anonymous Sobject fields Quick ORG Describe Replace API Names Convert SF Id Login As... Options Hide Fill in the 2020 Mason Frank Salary Survey to get a chance to win a $200 price ! Quicklinks Profiles Chamber Quick Console Home Quick Query Execute Anonymous Sobject fields Quick ORG Describe Replace API Names Convert SF Id Login As... Options Hide Salesforce Advanced Administrator Certification Guide: Become a Certified Advanced Salesforce Administrator with this exam guide - By Enrico Murru

@@ -1,0 +1,139 @@
+<apex:page standardController="Quote" renderAs="pdf" showHeader="false" extensions="QuoteExtensionTaxamo" standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.Addinsoft_Css)}" />
+        <title>Quote #{!Quote.QuoteNumber}</title>
+        <style>@page {size:{!IF(CountryCode == 'US', 'letter', 'A4')}};}</style>
+    </head>
+    <body>   
+        <!-- logo Addinsoft-->
+        <div><apex:image url="{!URLFOR($Resource.ADDINSOFT_INC_LOGO)}"/></div>
+            
+        <!-- Addinsof Address and contacts -->
+        <div><ul>
+            <li>Addinsoft Inc.</li>
+            <li>244<sup>th</sup> Fifth Avenue</li>
+            <li>Suite E100</li>
+            <li>New York NY 10001</li>
+            <li>USA</li>
+            <li>Tel: +1 (646) 412 3348</li>
+            <li>Email: <a href="mailto:sales@xlstat.com">sales@xlstat.com</a></li>
+            <li>D-U-N-S: 056229019</li>
+            <li>EIN: 83-3714089</li>
+        </ul></div>
+
+        <!-- client address and contacts -->
+        <div class="mt">
+            <ul>
+                <li><span class="m-bold">Bill to:</span></li>
+                <li>{!Quote.AccountName__c}</li>
+                <li>{!Quote.ContactName__c}</li>
+                <li><apex:outputText value="{!SUBSTITUTE(JSENCODE(Quote.BillingStreet),'\r\n','<li></li>')}" escape="false" /></li>
+                <li>{!Quote.BillingCity}&nbsp;{!State}&nbsp;{!Quote.BillingPostalCode}</li>
+                <li>{!Country}</li>
+            </ul>
+        </div>
+
+        <!-- Quote number and date -->
+        <div Class="mt-2">
+            <ul>
+                <li><span class="m-bold">QUOTE {!Quote.QuoteNumber}</span></li>
+                <apex:variable var="foo" value="bar" rendered="{!hasTVACustomer}"><li>Your VAT Nbr: {!Quote.Opportunity.Account.Num_ro_de_TVA__c}</li></apex:variable>
+            </ul>
+            <p>Date:&nbsp;<apex:outputText value="{0,date,MMMM d','  yyyy}"><apex:param value="{!Quote.Date__c}" /></apex:outputText></p>
+
+            <!-- Durée de validité du devis pour les devis EN en séparant les company et le reste -->
+            <apex:outputPanel rendered="{! !isDiscountCompanyDisplayed}" layout="none"><p>{!$Label.en_validite_devis}</p></apex:outputPanel>    
+            <apex:outputPanel rendered="{!isDiscountCompanyDisplayed}" layout="none">
+                <p>
+                    {!$Label.en_validite_devis_cmp}
+                    <!-- Réduction Early Bird -->
+                    <apex:outputText rendered="{!Quote.DiscountEarlyBird__c && isDiscountCompanyDisplayed}" value="{!$Label.en_earlybird_devis}" escape="false" />
+                </p>
+            </apex:outputPanel>              
+            <p>In order to be exempted, please remind us your current tax exemption number on each order.</p>
+        </div>   
+
+        <!-- Lignes de produits --> 
+        <div class="mt-2 border-top"><table class="table-produits">
+            <thead><tr>
+                    <th>Description</th>
+                    <th>User type</th>
+                    <th>License type</th>
+                    <th>QTY</th>
+                    <th>Unit Price</th>
+                    <!-- start discount --><apex:outputText rendered="{!Quote.HasDiscount__c}" value="<th>D&percnt;</th>" escape="false" /><!-- end discount -->
+                    <th>Tax Rate</th>
+                    <th><apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c = true}">TPT No</apex:outputPanel><apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}">Tax Amount </apex:outputPanel></th>
+                    <th>Total Amount</th>
+            </tr></thead>
+            <tbody>
+                <apex:variable value="{!1}" var="i"/>
+                <apex:repeat value="{!quoteLineItems}" var="quoteLineItem">
+                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};">
+                    <td>{!quoteLineItem.PricebookEntry.Product2.Libelle_Devis__c}</td>
+                    <td>{!quoteLineItem.PricebookEntry.Product2.Domaine_utilisateur_en__c}</td>
+                    <td>{!quoteLineItem.PricebookEntry.Product2.Type_licence_desc_EN__c}</td>
+                    <td><apex:outputText value="{0, number, integer}"><apex:param value="{!quoteLineItem.quantity}" /></apex:outputText></td>
+                    <td>{!quoteLineItem.UnitPriceWithCurrency__c}</td>                    
+                    <!-- start discount --><apex:outputText rendered="{!Quote.HasDiscount__c}" value="<td>{! quoteLineItem.Percent_Discount_Facture__c}</td>" escape="false" /><!-- end discount -->
+                     <td >
+                        <apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c= true}">
+                        0
+                         </apex:outputPanel>
+                        <apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}">{!quoteLineItem.TaxamoTaxeRate__c}</apex:outputPanel>
+                    </td>
+                    <td >
+                         <apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c= true}">
+                        {!Quote.us_tax_exemption_certificate_id__c}
+                         </apex:outputPanel>
+                        <apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}"><apex:outputText value="{0,number,$#,##0.00}"><apex:param value="{!quoteLineItem.TaxamoTaxeAmount__c}"/></apex:outputText></apex:outputPanel>
+                    </td>
+                    <td >
+                        <apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c= true}">{!quoteLineItem.TaxamoAmount__c}</apex:outputPanel>
+                        <apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}"><apex:outputText value="{0,number,$#,##0.00}"><apex:param value="{!quoteLineItem.TaxamoTotalAmount__c}"/></apex:outputText></apex:outputPanel>
+                    </td>
+                   
+                </tr>
+                <apex:variable value="{!i+1}" var="i" />
+                </apex:repeat>
+
+                <!--lignes vides pour séparer -->
+                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="9">&nbsp;</td></tr>
+                <tr style="background-color:{!IF(mod(i+1,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="9">&nbsp;</td></tr>
+                <tr><td colspan="9">&nbsp;</td></tr>
+                
+                <tr><td align="right" colspan="9"><apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}">SUBTOTAL: {!Quote.TaxamoAmount__c}</apex:outputPanel></td></tr>
+                <tr><td align="right" colspan="9"><apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}">{!Quote.BillingState} Sales Tax :  {!Quote.TaxamoTaxeAmount__c}</apex:outputPanel></td></tr>
+                <tr><td align="right" colspan="9"><apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c!= true}"><span class="m-bold">GRAND TOTAL:  {!Quote.TaxamoTotalAmount__c}</span></apex:outputPanel></td></tr> 
+                <tr><td align="right" colspan="9"><apex:outputPanel rendered="{!Quote.Tax_Exemption_Sent__c= true}"><span class="m-bold">GRAND TOTAL:   {!Quote.TotalAmountAfterTVAWithCurrency__c}</span></apex:outputPanel></td></tr>  
+
+                
+            </tbody>
+        </table></div>
+
+        <!--vilain spacer au-dessus de contenus dynamique-->
+        <p>&nbsp;</p>
+
+        <!-- 1 year support -->
+        <apex:outputPanel rendered="{! Quote.Type_Licence__c == 'Perpétuelle'}" layout="none"><p class="mt-2">Includes 1 year of upgrades and email support</p></apex:outputPanel>
+            
+        <!-- Note -->
+        <apex:outputPanel rendered="{!Quote.HasNoteEN__c}" layout="none"><p class="mt-2">Note: {!Quote.Note_devis__c}</p></apex:outputPanel>  
+        
+        <!-- Coordonnées bancaire -->        
+        <p class="mt-2">Please use the bank account information below to order a bank wire transfer. IMPORTANT: We would be grateful if you indicate our invoice number in your payment order.</p>
+
+        <!--Compte Bancaire -->
+        <p class="mt"><ul>
+            <li>Account owner: Addinsoft Inc.</li>
+            <li>Bank name: HSBC USA NA</li>
+            <li>Bank address: 452 Fifth Avenue, New York City</li>
+            <li>Account Number: 969000332</li>
+            <li>Routing Number: 022000020</li>
+            <li>ABA Number: 021001088</li>
+            <li>SWIFT CODE: MRMDUS33</li>
+        </ul></p>
+        <!-- Footer: Thanks -->    
+        <div class="footer"><p class="underline-orange mt-2">Thank you for choosing our products</p></div>
+    </body>        
+</apex:page>

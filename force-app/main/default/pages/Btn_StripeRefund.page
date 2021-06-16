@@ -1,0 +1,3 @@
+<apex:page standardController="order" extensions="Btn_StripeRefundExtension" action="{!refund}">
+    <apex:pageMessages id="messages" />
+</apex:page>

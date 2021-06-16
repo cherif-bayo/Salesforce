@@ -1,0 +1,19 @@
+<apex:page standardController="Opportunity" extensions="ChangeOpportunityCurrencyExtension">
+    <apex:form >
+        <apex:pageBlock title="Changer la devise de l'opportunité">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Changer" action="{!changeOrderCurrencyIsoCode}" rendered="{!NotChanged}" />
+                <apex:commandButton value="Retour" action="/{!opportunity.Id}" rendered="{!(!NotChanged)}" />
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem rendered="{!NotChanged}">
+                    <apex:outputText value="Choix devise"></apex:outputText>
+                    <apex:selectList value="{!CurrencyIsoCode}" multiselect="false" size="1">
+                        <apex:selectOptions value="{!CurrencyIsoCodes}"></apex:selectOptions>    
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

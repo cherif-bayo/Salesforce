@@ -1,0 +1,25 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:hasRecordId" access="global" controller="CommunityArticleDetailController">
+    <aura:attribute name="article" type="Knowledge__kav" access="global" />
+	<aura:attribute name="files" type="ContentVersion[]" access="global" />
+    
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    
+    <div class="content">
+        <h1 class="article-title">{!v.article.Title}</h1>
+        
+		<aura:if isTrue="{!v.files.length>0}">  
+        <div class="files">
+            <h2 id="dataset">{!$Label.c.Dataset}</h2>
+            <ul class="article-files">
+            <aura:iteration items="{!v.files}" var="f" indexVar="idx">
+                <li class="article-file"><a href="{!'https://cdn.xlstat.com/helpcentersfdc/'+f}" class="download-link">{!$Label.c.DownloadData} ({!idx+1})</a></li>
+            </aura:iteration>
+            </ul>
+        </div>
+        </aura:if>
+
+        <div class="article-detail">
+            <aura:unescapedHtml value="{!v.article.body__c}" />
+        </div>
+   </div>
+</aura:component>

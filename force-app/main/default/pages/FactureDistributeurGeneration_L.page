@@ -1,0 +1,7 @@
+<apex:page standardController="Facture_distributeur__c" extensions="FactureDistributeurGenerationExtension_L" action="{!Generate}">
+    <apex:form >
+        <apex:pageBlock title="Générer la facture en pdf">
+            <apex:pageMessages />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,6 @@
+<apex:page controller="FraisShareItCorrectionController">
+<apex:form >
+  <apex:outputText value="{!CountOrders}"></apex:outputText>
+  <apex:commandButton action="{!Generate}" value="Generate" />
+  </apex:form>
+</apex:page>

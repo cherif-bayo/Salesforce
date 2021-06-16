@@ -1,0 +1,414 @@
+<apex:page standardStylesheets="true" doctype="html-5.0" standardController="Order" extensions="OrderControllerPersonnalise" tabStyle="Order">
+<!--<apex:stylesheet value="{!URLFOR($Resource.bootstrap2)}" />-->
+<style>
+.pbSubheader{
+    background-color : #75AADB !important;
+}
+
+
+.Alignement{
+    width: 10% !important;
+    
+}
+
+.AlignementFloat{
+  
+    float:left !important;
+    
+    height:250px !important;
+    border: 3px solid #75AADB !important;
+    border-radius: 8px !important;
+    text-align: center;
+}
+
+.AlignementHaut{
+    float:left !important;
+}
+
+.col1,.col2{width:49%;!important;}
+</style>
+
+
+
+    <apex:form rendered="{!RenderAll}">
+    <apex:variable value="{!0.00}" var="total1"/>
+    <apex:outputPanel id="RefreshAll">
+    
+      <apex:sectionHeader title="Nouvelle commande"/>
+      <apex:pageblock >
+      <apex:pageMessages />
+      
+      <!-- Partie/Formulaire concernant les Informations générales de la Commande -->
+        <apex:pageBlockSection title="Informations générales" columns="4">
+        <apex:pageBlockSectionItem >
+        <apex:outputText >Domaine Utilisateur </apex:outputText>
+            <apex:selectList size="1" value="{!SelectedDomaine}">
+               <apex:selectOptions value="{!DomaineList}"/>
+               <apex:actionsupport event="onchange" action="{!RefreshLicences}" rerender="RefreshAll" />
+          </apex:selectList>
+        </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem >
+          <apex:outputText >Devise </apex:outputText>
+          <apex:inputField value="{!MyOrder.CurrencyIsoCode}">
+              <apex:actionsupport event="onchange" action="{!UpdatePricebook}"/>
+          </apex:inputField>
+          </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem rendered="{!RenderLangue}">
+          <apex:outputText >Langue </apex:outputText>
+          <apex:inputField value="{!NewContact.Langue__c}"/>
+          </apex:pageBlockSectionItem>        
+
+        </apex:pageblocksection>
+        
+        <apex:pageBlockSection title="Remarques" columns="1">
+             
+             
+             <apex:inputField value="{!MyOrder.Remarques__c}" style="width:40%; height:100px;"/>
+         </apex:pageblocksection>
+         
+        <!-- Partie/Formulaire concernant la Provenance -->
+        <apex:pageBlockSection title="Provenance" columns="1" rendered="{!RenderProvenance}">
+            <apex:selectRadio value="{!SelectedProvenance}">
+                <apex:selectOptions value="{!Provenance}"/>
+                <apex:actionsupport event="onclick" action="{!AppearReferenceField}" rerender="RefreshAll"/>
+            </apex:selectRadio>
+            <apex:outputPanel id="RefreshProvenance">
+            <apex:outputPanel rendered="{!RenderReferenceFieldBDC}">
+                <apex:outputText value="{!Reference}" />
+                <apex:inputField value="{!MyOrder.R_f_Bon_de_commande__c}"/>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!RenderReferenceFieldShareIt}">
+                <apex:outputText value="{!Reference}" />
+                <apex:inputField value="{!MyOrder.Ref_ShareIt__c}"/>
+            </apex:outputPanel>
+            </apex:outputPanel>
+         </apex:pageblocksection>
+         <div>
+         
+        <!-- Partie/Formulaire concernant le Client --> 
+         <apex:pageBlockSection title="Client" columns="1" rendered="{!RenderClient}">
+         <apex:pageBlockSectionItem >
+             <apex:selectRadio value="{!SelectedStatutClient}">
+                <apex:selectOptions value="{!StatutClient}"/>
+                <apex:actionsupport event="onclick" action="{!AppearClientFields}" rerender="RefreshAll"/>
+            </apex:selectRadio>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+          </apex:pageBlockSectionItem>
+            
+            <!-- Partie recherche concernant un Client Existant -->
+            <apex:outputPanel id="RefreshFields">
+            <apex:outputPanel rendered="{!RenderClientFields}">
+                        <apex:outputPanel rendered="{!RenderClientSearch}" >
+            <apex:outputText value="Recherche Contact : "/>       
+                 <apex:inputField value="{!MyOrder.Contact_lie__c}" />
+                 <apex:actionsupport event="onchange" action="{!AppearClientFields}" rerender="RefreshAll" />
+            </apex:outputPanel>     
+
+                         
+            <apex:outputPanel rendered="{!Ceciestuntest}"><br/><br/>
+                <apex:outputText value="Nom du compte lié à ce contact : "/>
+
+                <apex:inputText value="{!PersonAccount.Name}" html-readonly="true" style="text-transform:capitalize; background-color:#C0C0C0;"/><br/><br/>
+                            
+             </apex:outputPanel>
+             </apex:outputPanel>
+             
+             <!-- Formulaire pour un nouveau Compte Client Perso -->
+             <apex:outputPanel rendered="{!Ceciestuntest3}">
+             <div class="AlignementFloat" style="width:17%;">
+             <apex:outputText value="Compte :" style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                <apex:selectList size="1" value="{!SelectedSalutationPerso}">
+                    <apex:selectOptions value="{!SalutationList}"/>
+                </apex:selectList><br/><br/>
+                <apex:outputText value="Nom : "/><br/>
+
+                <apex:inputText value="{!PersonAccount.LastName}" style="text-transform:capitalize;"/><br/><br/>
+
+                <apex:outputText value="Prénom : " /><br/>
+
+                <apex:inputText value="{!PersonAccount.FirstName}" style="text-transform:capitalize;"/><br/><br/>
+
+                <apex:outputText value="Mail : " /><br/>
+
+                <apex:inputField value="{!PersonAccount.PersonEmail}" html-placeholder="xj@exemple.com"/><br/><br/>
+
+                <apex:outputText value="Second Mail : " /><br/>
+
+                <apex:inputField value="{!PersonAccount.Second_mail__pc}" html-placeholder="xj@exemple.com"/><br/><br/>
+            </div>
+            <div class="AlignementFloat" style="margin-left:12%; width:28%;">
+                <apex:outputText value="Adresse de facturation : " style="font-weight: bold; font-size: 15px;"/>
+                <apex:commandButton value="=>" title="Dupliquer" action="{!DupliquerAdresse}" rerender="RefreshAll"/><br/><br/>
+                <apex:outputText value="Pays : " /><br/>
+
+                <apex:inputField value="{!PersonAccount.BillingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.BillingStreet}"  html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.BillingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStatePerso}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!PersonAccount.BillingPostalCode}"  html-placeholder="Code Postal"/><br/><br/>
+            </div>
+            <div class="AlignementFloat" style="margin-left:12%; width:28%;">
+                <apex:outputText value="Adresse d'Expédition : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                
+                <apex:outputText value="Pays : " /><br/>
+                <apex:inputField value="{!PersonAccount.ShippingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.ShippingStreet}" html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.ShippingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStatePersoShipping}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!PersonAccount.ShippingPostalCode}" html-placeholder="Code Postal"/><br/><br/>
+
+              </div>
+       
+             </apex:outputPanel>
+             
+             <!-- Formulaire pour un nouveau Compte Client Pro -->
+             <apex:outputPanel rendered="{!Ceciestuntest4}">
+             <div class="AlignementFloat" style="width:16%;">
+                <apex:outputText value="Compte :" style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                <apex:outputText >Nom Compte : </apex:outputText><br/>
+                <apex:inputText value="{!PersonAccount.Name}" /> <br/><br/>
+                <apex:outputText value="Numéro TVA : " /><br/>
+
+                 <apex:inputField value="{!PersonAccount.Num_ro_de_TVA__c}" style="text-transform:uppercase;"/><br/><br/>
+             </div>
+            <div class="AlignementFloat" style="margin-left:2%; width:28%;">
+                <apex:outputText value="Adresse de Facturation : " style="font-weight: bold; font-size: 15px;"/>
+                <apex:commandButton value="=>" title="Dupliquer" action="{!DupliquerAdresse}" rerender="RefreshAll"/><br/><br/>
+                
+                <apex:outputText value="Pays : " /><br/>
+                <apex:inputField value="{!PersonAccount.BillingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.BillingStreet}" html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.BillingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStatePro}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!PersonAccount.BillingPostalCode}" html-placeholder="Code Postal"/><br/><br/>
+
+                
+
+                
+              </div>
+              <div class="AlignementFloat" style="margin-left:2%; width:28%;">
+                <apex:outputText value="Adresse d'Expédition : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                
+                <apex:outputText value="Pays : " /><br/>
+                <apex:inputField value="{!PersonAccount.ShippingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.ShippingStreet}" html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!PersonAccount.ShippingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStateProShipping}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!PersonAccount.ShippingPostalCode}" html-placeholder="Code Postal"/><br/><br/>
+
+                
+
+                
+              </div>
+              
+              <!-- Formulaire concernant le Contact du nouveau Client Pro -->
+                 <div class="AlignementFloat" style="margin-left:2%; width:16%;">
+                 
+                 <apex:outputText value="Contact : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                 <apex:selectList size="1" value="{!SelectedSalutationPro}">
+                    <apex:selectOptions value="{!SalutationList}"/>
+                </apex:selectList><br/><br/>
+                 <apex:outputText value="Nom : "/><br/>
+                 <apex:inputText value="{!NewContact.LastName}"/><br/><br/>
+                 
+                 <apex:outputText value="Prénom : "/><br/>
+                 <apex:inputText value="{!NewContact.FirstName}"/><br/><br/>
+                 
+                 <apex:outputText value="Mail : "/><br/>
+                 <apex:inputField value="{!NewContact.Email}"/><br/><br/>
+                 
+                 <apex:outputText value="Second Mail : "/><br/>
+                 <apex:inputField value="{!NewContact.Second_mail__c}"/><br/><br/>
+                 
+                 </div>
+             </apex:outputPanel>
+             </apex:outputPanel>
+            
+         </apex:pageblocksection>
+         </div>
+         
+         <apex:pageBlockSection title="Client Final" columns="1" rendered="{!RenderClientFinal}">
+             <apex:selectRadio value="{!SelectedStatutClientFinal}">
+                <apex:selectOptions value="{!StatutClientFinal}"/>
+                <apex:actionsupport event="onclick" action="{!AppearClientFinalFields}" rerender="RefreshClientFinal"/>
+                
+                
+            </apex:selectRadio>
+            
+            <!-- Partie recherche concernant un Client Final Existant -->
+            <apex:outputPanel id="RefreshClientFinal">
+            <apex:outputPanel rendered="{!RenderClientFinalSearch}">
+            <apex:outputText value="Recherche Compte Client Final : " style="float:left;">
+            <apex:inputField value="{!MyOrder.Client_final__c}"/>
+            </apex:outputText>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!RenderClientFinalFields}">
+            <apex:selectRadio value="{!SelectedStatutCompteClientFinal}">
+                <apex:selectOptions value="{!StatutCompteClientFinal}"/>
+                <apex:actionsupport event="onclick" action="{!AppearClientFinalFields}" rerender="RefreshClientFinal"/>
+            </apex:selectRadio>    
+            
+            </apex:outputPanel>
+            <br/>
+            <!-- Formulaire pour un nouveau Compte Client Final Pro -->
+            <apex:outputPanel rendered="{!RenderCompteClientFinalFields}">
+            <div class="AlignementFloat" style="width:16%;">   
+                <apex:outputText value="Compte :" style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                <apex:outputText >Nom Compte : </apex:outputText><br/>
+                <apex:inputText value="{!ClientFinalAccount.Name}" /> <br/><br/>
+                
+                <apex:outputText value="Numéro TVA : " /><br/>
+
+                <apex:inputField value="{!ClientFinalAccount.Num_ro_de_TVA__c}" style="text-transform:uppercase;"/><br/><br/>
+            </div>
+            <div class="AlignementFloat" style="margin-left:2%; width:28%;">
+                <apex:outputText value="Adresse de Facturation : " style="font-weight: bold; font-size: 15px;"/>
+                <apex:commandButton value="=>" title="Dupliquer" action="{!DupliquerAdresseClientFinal}" rerender="RefreshAll"/><br/><br/>
+                
+                <apex:outputText value="Pays : " /><br/>
+                <apex:inputField value="{!ClientFinalAccount.BillingCountryCode}"/><br/><br/>
+                
+                <apex:inputField value="{!ClientFinalAccount.BillingStreet}" html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.BillingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStateClientFinalPro}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.BillingPostalCode}" html-placeholder="Code Postal"/><br/><br/>
+
+                 </div>
+                 
+                <div class="AlignementFloat" style="margin-left:2%; width:28%;">
+                <apex:outputText value="Adresse d'Expédition : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                
+                <apex:outputText value="Pays : " /><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingStreet}" html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStateClientFinalPro}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingPostalCode}" html-placeholder="Code Postal"/><br/><br/>
+
+                
+
+                
+              </div>
+                 
+                <!-- Formulaire concernant le Contact du nouveau Client Pro -->
+                 <div class="AlignementFloat" style="margin-left:2%; width:16%;">
+                 <apex:outputText value="Contact : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                 <apex:selectList size="1" value="{!SelectedSalutationClientFinalPro}">
+                    <apex:selectOptions value="{!SalutationList}"/>
+                 </apex:selectList><br/><br/>
+                 <apex:outputText value="Nom : "/><br/>
+                 <apex:inputText value="{!ClientFinalContact.LastName}"/><br/><br/>
+                 
+                 <apex:outputText value="Prénom : "/><br/>
+                 <apex:inputText value="{!ClientFinalContact.FirstName}"/><br/><br/>
+                 
+                 <apex:outputText value="Mail : "/><br/>
+                 <apex:inputField value="{!ClientFinalContact.Email}"/><br/><br/>
+                 
+                 <apex:outputText value="Second Mail : "/><br/>
+                 <apex:inputField value="{!ClientFinalContact.Second_mail__c}"/><br/><br/>
+                 </div>
+             </apex:outputPanel>
+             
+            <!-- Formulaire pour un nouveau Compte Client Final Perso -->
+             <apex:outputPanel rendered="{!RenderComptePersoClientFinalFields}">
+                <div class="AlignementFloat" style="width:17%;">
+                <apex:outputText value="Compte : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                <apex:selectList size="1" value="{!SelectedSalutationClientFinalPerso}">
+                    <apex:selectOptions value="{!SalutationList}"/>
+                </apex:selectList><br/><br/>
+                <apex:outputText value="Nom : "/><br/>
+
+                <apex:inputText value="{!ClientFinalAccount.LastName}" style="text-transform:capitalize;"/><br/><br/>
+
+                <apex:outputText value="Prénom : " /><br/>
+
+                <apex:inputText value="{!ClientFinalAccount.FirstName}" style="text-transform:capitalize;"/><br/><br/>
+
+                <apex:outputText value="Mail : " /><br/>
+
+                <apex:inputField value="{!ClientFinalAccount.PersonEmail}" html-placeholder="xj@exemple.com"/><br/><br/>
+
+                <apex:outputText value="Second Mail : " /><br/>
+
+                <apex:inputField value="{!ClientFinalAccount.Second_mail__pc}" html-placeholder="xj@exemple.com"/><br/><br/>
+                
+                </div>
+                
+                <div class="AlignementFloat" style="margin-left:12%; width:28%;">
+                <apex:outputText value="Adresse de facturation : " style="font-weight: bold; font-size: 15px;"/>
+                <apex:commandButton value="=>" title="Dupliquer" action="{!DupliquerAdresseClientFinal}" rerender="RefreshAll"/><br/><br/>
+                <apex:outputText value="Pays : " /><br/>
+
+                <apex:inputField value="{!ClientFinalAccount.BillingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.BillingStreet}"  html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.BillingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStateClientFinalPerso}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.BillingPostalCode}"  html-placeholder="Code Postal"/><br/><br/>
+
+                </div>
+                
+                <div class="AlignementFloat" style="margin-left:12%; width:28%;">
+                <apex:outputText value="Adresse d'Expédition : " style="font-weight: bold; font-size: 15px;"/><br/><br/>
+                
+                <apex:outputText value="Pays : " /><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingCountryCode}"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingStreet}" html-placeholder="Rue"/><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingCity}" html-placeholder="Ville"/><br/><br/>
+                <apex:SelectList value="{!SelectedStateClientFinalPerso}" size="1">
+                    <apex:selectOptions value="{!StateList}"></apex:selectOptions>
+                </apex:SelectList><br/><br/>
+                <apex:inputField value="{!ClientFinalAccount.ShippingPostalCode}" html-placeholder="Code Postal"/><br/><br/>
+                </div>
+
+             </apex:outputPanel>
+             
+                         
+            </apex:outputPanel>
+         </apex:pageblocksection>
+         
+        <!-- Partie/Formulaire concernant les Discounts -->
+         <apex:pageBlockSection title="Discount" columns="2" rendered="{!RenderDiscountAndProducts}">
+                <apex:inputField id="discountManualActivated" value="{!MyOrder.Discount_Manuel_Activated__c}" />
+                <apex:inputField value="{!MyOrder.Discount_Manuel__c}">
+                    <apex:actionsupport event="onchange" action="{!RefreshDiscountManual}" rerender="discountManualActivated" />
+                </apex:inputField>
+
+                <apex:inputField id="discountClientActivated" value="{!MyOrder.Discount_Client_Activated__c}" />
+                <apex:inputField value="{!PersonAccount.Discount_global__c}" label="Discount Client">
+                    <apex:actionsupport event="onchange" action="{!RefreshDiscountClient}" rerender="discountClientActivated" />
+                </apex:inputField>
+                
+                <apex:inputField id="discountCouponActivated" value="{!MyOrder.Discount_Coupon_Activated__c}" />
+
+                <apex:outputText id="discountCoupon" value="{!DiscountCoupon}" label="Discount Coupon"/>
+                
+                <apex:inputField value="{!MyOrder.Ref_du_coupon__c}">
+                <apex:actionsupport event="onchange" action="{!RefreshCoupon}" rerender="discountCoupon, discountCouponActivated" />
+                </apex:inputField>
+
+         </apex:pageblocksection>
+     
+     <!-- Premier tableau concernant les différents produits en fonction du domaines utilisateur et type licence selectionnés --> 
+      <c:OrderAddProduct Render="{!RenderDiscountAndProducts}" Licences="{!LicenceList}" Domain="{!SelectedDomaine}" Account="{!PersonAccount}" Order="{!MyOrder}" OrderItems="{!ProductsOrderItems}" Licence="" Curr="" />
+      </apex:pageBlock>
+</apex:outputPanel>
+</apex:form>
+
+</apex:page>

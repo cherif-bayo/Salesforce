@@ -1,0 +1,69 @@
+<apex:page controller="FlexeraAddExistingKeyToOrderController">
+  <apex:form >
+        <apex:pageBlock id="pageBlockNalpeironKeys" title="Clés à ajouter">
+            <apex:pageMessages id="messages" />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Ajouter" action="{!Add}" />
+                <apex:commandButton value="Annuler" action="{!Cancel}" />                
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:panelgrid columns="2">
+                        <apex:inputText value="{!SearchText}"/>
+                        <apex:commandButton value="Chercher" action="{!Search}" rendered="true" reRender="pageBlockNalpeironKeys" />
+                    </apex:panelgrid>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="pageBlockSectionItemKeys">
+                    <apex:pageBlockTable value="{!WrapperKeys}" var="WrapperKey">  
+                        <apex:column headerValue="Sélectionner">
+                            <apex:inputCheckbox value="{!WrapperKey.IsSelected}"/>
+                        </apex:column> 
+                        <apex:column headerValue="Numéro">  
+                          <apex:commandLink action="/{!WrapperKey.Key.Id}" value="{!WrapperKey.Key.Name}" target="_blank" />
+                        </apex:column>
+                        <apex:column headerValue="Commande">  
+                          <apex:commandLink action="/{!WrapperKey.Key.Order__c}" value="{!WrapperKey.Key.Order__r.OrderNumber}" target="_blank" />
+                        </apex:column>
+                        <apex:column headerValue="Contact">  
+                          <apex:commandLink action="/{!WrapperKey.Key.Contact__c}" value="{!WrapperKey.Key.Contact__r.Name}" target="_blank" />
+                        </apex:column>
+                        <apex:column headerValue="Date limite">  
+                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                              <apex:param value="{!WrapperKey.Key.Date_limite__c}" /> 
+                            </apex:outputText>
+                        </apex:column>  
+                        <apex:column headerValue="Domaine utilisateur">  
+                          {!WrapperKey.Key.Domaine_utilisateur__c}  
+                        </apex:column>  
+                        <apex:column headerValue="Expiration">  
+                          {!WrapperKey.Key.Expiration__c}  
+                        </apex:column>  
+                        <apex:column headerValue="Modules">  
+                          {!WrapperKey.Key.Modules__c}  
+                        </apex:column>    
+                        <apex:column headerValue="Nb activations">  
+                            {!WrapperKey.Key.Nb_activations__c}
+                        </apex:column> 
+                        <apex:column headerValue="Nb activations possibles">  
+                            {!WrapperKey.Key.Nb_activations_allowed__c}
+                        </apex:column> 
+                        <apex:column headerValue="Type client">  
+                          {!WrapperKey.Key.Type_client__c}  
+                        </apex:column> 
+                        <apex:column headerValue="Type licence">  
+                          {!WrapperKey.Key.Type_licence__c}  
+                        </apex:column> 
+                        <apex:column headerValue="Réseau">  
+                            <apex:image url="/img/msg_icons/confirm16.png" rendered="{!WrapperKey.Key.Is_Network__c}" />
+                        </apex:column> 
+                        <apex:column headerValue="Version">  
+                          {!WrapperKey.Key.Version__r.Name}  
+                        </apex:column> 
+                     </apex:pageBlockTable>
+                 </apex:pageBlockSectionItem>  
+             </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

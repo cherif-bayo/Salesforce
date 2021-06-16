@@ -1,0 +1,6 @@
+<apex:page controller="AvoirToOrder">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!AddAvoirToOrder}" value="Add avoir facture" />
+  </apex:form>
+</apex:page>

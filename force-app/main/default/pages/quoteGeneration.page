@@ -1,0 +1,7 @@
+<apex:page standardController="Quote" extensions="QuoteGenerationController" action="{!Generate}">
+    <apex:form >
+        <apex:pageBlock title="Générer le devis en pdf">
+            <apex:pageMessages />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

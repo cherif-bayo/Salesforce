@@ -1,0 +1,34 @@
+<apex:page standardController="Order" extensions="OrderCloneExtension">
+    <apex:form >
+        <apex:pageBlock title="Cloner la commande">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Clone" action="{!CustomClone}" />
+                <apex:commandButton value="Retour" action="/{!Order.Id}" />
+            </apex:pageBlockButtons>
+            <apex:pageMessages />
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Cloner avec les clefs"></apex:outputText>
+                    <apex:inputCheckbox value="{!GenerateKeys}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Provenance"></apex:outputText>
+                    <apex:selectRadio value="{!Provenance}">
+                        <apex:selectOptions value="{!Provenances}"/>
+                        <apex:actionSupport event="onchange" reRender="wrapperPannel" />
+                    </apex:selectRadio>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="wrapperPannel" columns="1">
+                <apex:pageBlockSectionItem rendered="{!RenderRefShareIt}">
+                    <apex:outputText value="Référence ShareIt"></apex:outputText>
+                    <apex:inputField value="{!NewOrder.Ref_ShareIt__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!RenderRefBonCommande}">
+                    <apex:outputText value="Référence bon de commande"></apex:outputText>
+                    <apex:inputField value="{!NewOrder.R_f_Bon_de_commande__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

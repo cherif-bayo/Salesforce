@@ -1,0 +1,44 @@
+<apex:page controller="SendWelcomePackageController" tabStyle="Plaquette__c" action="{!UpdatePlaquette}">
+
+	<apex:form >
+	  <apex:pageBlock title="Envoyer le welcome package">
+		 <apex:pagemessages />
+		 <apex:pageBlockButtons >
+			 <apex:commandButton action="{!Send}" value="Envoyer" rendered="{!NoErrorPlaquette}"/>
+			 <apex:commandButton action="{!Cancel}" value="Annuler"/>
+		 </apex:pageBlockButtons>
+		 <apex:pageblockSection columns="1" title="Informations plaquette" rendered="{!NoError}">
+			 <apex:inputField value="{!Plaquette.Domaine__c}">
+				 <apex:actionSupport event="onchange" action="{!UpdatePlaquette}"/>
+			 </apex:inputField>
+			 <apex:inputField value="{!Plaquette.Solution__c}">
+				 <apex:actionSupport event="onchange" action="{!UpdatePlaquette}"/>
+			 </apex:inputField>
+			 <apex:inputField value="{!Plaquette.Langue__c}">
+				 <apex:actionSupport event="onchange" action="{!UpdatePlaquette}"/>
+			 </apex:inputField>
+			 <apex:inputField value="{!Plaquette.Currency__c}">
+				 <apex:actionSupport event="onchange" action="{!UpdatePlaquette}"/>
+			 </apex:inputField>
+			 <apex:inputField value="{!Plaquette.isDemo__c}">
+				 <apex:actionSupport event="onchange" action="{!UpdatePlaquette}"/>
+			 </apex:inputField>
+		 </apex:pageblockSection>
+		 <apex:pageblockSection id="DemoFalse" rendered="{!EmailIsDemo == false}" columns="1" title="Texte qui sera envoyé">
+			 <apex:outputText value="{!Plaquette.Sujet_Email__c}" />
+			 <apex:outputText value="{!Plaquette.Texte_Email__c}" escape="false" />
+			 <apex:outputText value="{!Plaquette.Html_Email__c}" escape="false" /> 
+		 </apex:pageBlockSection>
+		 <apex:pageblockSection id="DemoTrue" rendered="{!EmailIsDemo == true}" columns="1" title="Texte qui sera envoyé">
+			 <apex:outputText value="{!Plaquette.Sujet_Email__c}" />
+			 <apex:outputText value="{!Plaquette.Texte_Email_Demo__c}" escape="false" />
+			 <apex:outputText value="{!Plaquette.Html_Email_Demo__c}" escape="false" />
+		 </apex:pageBlockSection>
+		 <apex:pageblockSection rendered="{!NoErrorPlaquette}" columns="1" title="Fichier pdf qui sera envoyé">
+			 <object data="/servlet/servlet.FileDownload?file={!PlaquetteDocument.Id}" type="application/pdf" width="100%" height="1000px">
+			  <embed src="/servlet/servlet.FileDownload?file={!PlaquetteDocument.Id}" width="100%" height="1000px"/>
+			</object>
+		 </apex:pageBlockSection>
+	  </apex:pageBlock>
+	</apex:form>
+</apex:page>

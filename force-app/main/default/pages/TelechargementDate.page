@@ -1,0 +1,6 @@
+<apex:page controller="TelechargementDate">
+<apex:form >
+  Orders: <apex:outputText value="{!CountOrder}"></apex:outputText>
+    <apex:commandButton action="{!ChangeDate}" value="Change date telechargement avec date nulle" />
+  </apex:form>
+</apex:page>

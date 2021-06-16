@@ -1,0 +1,68 @@
+<apex:page standardStylesheets="true" doctype="html-5.0" standardController="Order" extensions="OrderController" tabStyle="Order">
+	<style>
+		.pbSubheader{
+			background-color : #75AADB !important;}
+		.Alignement{
+			width: 10% !important;}
+		.AlignementFloat{
+			float:left !important;
+			height:250px !important;
+			border: 3px solid #75AADB !important;
+			border-radius: 8px !important;
+			text-align: center;}
+		.AlignementHaut{
+			float:left !important;}
+		.col1,.col2{
+			width:49%;!important;}
+	</style>
+
+	<apex:form >
+		<apex:outputPanel >
+		
+			<apex:sectionHeader title="Nouvelle commande pour une formation"/>
+			<apex:pageblock >
+				<apex:pageMessages />
+		
+				<!-- Partie concernant les informations de la Campaign (Formation) -->
+				<apex:pageBlockSection title="Campaign information" columns="1">
+					<apex:outputField value="{!Order.Formations__c}"/>
+				</apex:pageBlockSection>
+
+				<apex:pageBlockSection title="Order Detail" columns="2">
+					<apex:outputField value="{!Order.Provenance__c}"/>
+					<apex:outputField value="{!Order.Domaine_utilisateur__c}"/>
+					<apex:inputField value="{!Order.CurrencyIsoCode}">
+						<apex:actionsupport event="onchange" action="{!DisplayProductList}"/>
+					</apex:inputField>
+					<apex:outputField value="{!Order.Type_licence__c}"/>
+					<apex:inputField value="{!Order.Remarques__c}" style="width:500px; height:50px;"/>
+				</apex:pageBlockSection>
+				
+				<!-- Client -->
+				<div>
+				<apex:pageBlockSection title="Client" columns="1">
+					<apex:inputField value="{!Order.Contact_lie__c}"/>
+				</apex:pageBlockSection>
+				</div>
+				
+				<apex:pageBlockSection title="Produit" columns="1">
+					<apex:pageBlockTable value="{!wrapProductList}" var="prodWrap">
+						<apex:column value="{!prodWrap.prod.Name}" headerValue="Nom Produit" />
+						<apex:column value="{!prodWrap.prod.ProductCode}" headerValue="Code Produit" />
+						<apex:column value="{!prodWrap.prod.Type_licence_desc_EN__c}" headerValue="Type de Licence" />
+						<apex:column value="{!prodWrap.prod.Domaine_utilisateur_en__c}" headerValue="Domaine Utilisateur" />
+					</apex:pageBlockTable>
+					<apex:inputText value="{!orderItemQuantity}" label="Quantité"/>
+					<apex:inputText value="{!orderItemUnityPrice}" label="Prix à l'unité"/>
+				</apex:pageBlockSection>
+				
+				<apex:pageBlockButtons location="both">
+					<apex:commandButton value="Save" action="{!save}"/>
+					<apex:commandButton value="Cancel" action="/{!Order.Formations__c}" />
+				</apex:pageBlockButtons>
+
+			</apex:pageblock>
+
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>

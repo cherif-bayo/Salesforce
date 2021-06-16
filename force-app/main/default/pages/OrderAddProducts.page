@@ -1,0 +1,12 @@
+<apex:page standardController="Order" extensions="OrderAddProductsExtension">
+<apex:form >
+<apex:pageblock title="Ajouter des produits">
+<apex:pageblockButtons >
+    <apex:commandButton action="/{!Order.Id}" value="Retour" />
+</apex:pageblockButtons>
+<apex:pageblockSection >
+  <c:OrderAddProduct Render="true" Licences="{!LicenceList}" Domain="{!OrderDomain}" Account="{!Account}" Order="{!Order}" OrderItems="{!ProductsOrderItems}" Licence="{!Order.Type_licence__c}" Curr="{!Order.CurrencyIsoCode}" />
+  </apex:pageblockSection>
+  </apex:pageblock>
+  </apex:form>
+</apex:page>

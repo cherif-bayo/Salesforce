@@ -1,0 +1,7 @@
+<apex:page standardController="Contact" extensions="SendEmailMyAccountFixDuplicateExtension" action="{!SendEmail}">
+    <apex:form >
+        <apex:pageBlock title="Envoie email My XLSTAT">
+            <apex:pageMessages />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

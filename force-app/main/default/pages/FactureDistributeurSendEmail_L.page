@@ -1,0 +1,33 @@
+<apex:page standardController="Facture_distributeur__c" extensions="FactureDistributeurSendEmailExtension_L">
+<apex:form >
+    <apex:pageBlock title="Envoyer la facture par email">
+        <apex:pageBlockButtons >                   
+                <apex:commandButton action="{!Send}" value="Envoyer" rendered="{!isValid}" /> 
+                <apex:commandButton action="/{!FactureId}" value="Annuler"/> 
+        </apex:pageBlockButtons>
+        <apex:pageMessages />
+        <apex:pageBlock title="Email" rendered="{!isValid}">
+        <apex:pageBlockSection columns="1">
+              <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="EmailContact" value="Email"/>
+                 <apex:selectList value="{!Email}" size="1">
+                    <apex:selectOptions value="{!Emails}"/>
+                </apex:selectList>
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="file" value="Fichier joint"/>
+                 <apex:commandLink value="{!AttachmentName}" action="/{!AttachmentLink}" target="_blank" />
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="subject" value="Sujet"/>
+                 <apex:inputText value="{!Subject}" style="width: 435px;" />
+             </apex:pageBlockSectionItem>
+             <apex:pageBlockSectionItem >
+                 <apex:outputLabel for="body" value="Contenu"/>
+                 <apex:inputTextarea value="{!Body}" rows="7" cols="70" />
+             </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,22 @@
+<apex:page controller="OrderController">
+    <apex:form >
+        <apex:pagemessages />
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="4"> 
+                  <apex:inputFile value="{!csvFileBody}" />
+                  <apex:commandButton value="Import orders" action="{!importCSVFile}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="4"> 
+                  <apex:commandButton value="Delete Nalpeiron Keys" action="{!deleteNalpeironKeys}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="4"> 
+                  <apex:commandButton value="Deactivate all orders" action="{!DeactivateAllOrders}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+   </apex:form>
+</apex:page>

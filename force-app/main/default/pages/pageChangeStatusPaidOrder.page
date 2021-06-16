@@ -1,0 +1,5 @@
+<apex:page controller="OrderToPaidStatus">
+<apex:form >
+  <apex:commandButton action="{!ChangeStatus}" value="Change status orders"/>
+</apex:form>
+</apex:page>
