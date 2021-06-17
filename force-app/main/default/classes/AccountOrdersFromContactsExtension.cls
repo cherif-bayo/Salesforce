@@ -1,4 +1,4 @@
-public class AccountOrdersFromContactsExtension{
+public without sharing class AccountOrdersFromContactsExtension{
     public List<Order> orders {get; set;}
     
     private final Account acct;

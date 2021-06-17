@@ -24,5 +24,6 @@ public class ActivationHelper {
 	public static Decimal getQuantityBoughtFromNbActivationsAllowed(Decimal quantity) {
 		return quantity <= 20 ? quantity - 1 : Integer.valueof(Math.roundToLong(quantity - quantity * 0.1));
 	}
+	// Test addin comment from VSCODE
 
 }
