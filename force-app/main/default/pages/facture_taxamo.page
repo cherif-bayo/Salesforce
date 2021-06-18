@@ -45,8 +45,7 @@
                 <li>{!Facture__c.AccountName__c}</li>
                 <li>{!Facture__c.ContactName__c}</li>
                 <li>
-                    <apex:outputText value="{!SUBSTITUTE(JSENCODE(Facture__c.BillingStreet__c),'\r\n','<li></li>')}" escape="false"
-                    />
+                    <apex:outputText value="{!SUBSTITUTE(JSENCODE(Facture__c.BillingStreet__c),'\r\n','<li></li>')}" escape="false" />
                 </li>
                 <li>{!Facture__c.BillingCity__c}&nbsp;{!State}&nbsp;{!Facture__c.BillingPostalCode__c}</li>
                 <li>{!Country}</li>
@@ -78,8 +77,7 @@
                         <th>QTY</th>
                         <th>Unit Price</th>
                         <!-- start discount -->
-                        <apex:outputText rendered="{!Facture__c.Commande_lie__r.HasDiscount__c}" value="<th>D&percnt;</th>"
-                            escape="false" />
+                        <apex:outputText rendered="{!Facture__c.Commande_lie__r.HasDiscount__c}" value="<th>D&percnt;</th>" escape="false" />
                         <!-- end discount -->
                         <th>Tax Rate</th>
                         <th>
@@ -208,7 +206,7 @@
             <p class="mt-2">In accordance with our GTC available on our website, payment is due 30 days after reception of the invoice.</p>
 
             <!-- Coordonnées bancaire -->
-            <p class="mt-2">Please use the bank account information below to order a bank wire transfer. IMPORTANT: We would be grateful
+            <p class="mt">Please use the bank account information below to order a bank wire transfer. IMPORTANT: We would be grateful
                 if you indicate our invoice number in your payment order.</p>
 
             <!--Compte Bancaire -->

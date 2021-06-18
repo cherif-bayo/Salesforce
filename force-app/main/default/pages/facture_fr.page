@@ -148,7 +148,7 @@
         <!-- facture à régler -->
         <apex:outputPanel rendered="{! !Facture__c.PayedWithStripe__c}" layout="none">
             <!-- CGU -->
-            <p class="mt">En votre aimable règlement dans un délai de 30 jours à compter de la réception de la facture.</p>
+            <p class="mt-2">En votre aimable règlement dans un délai de 30 jours à compter de la réception de la facture.</p>
 
             <!-- Coordonnées bancaire -->
             <p class="mt">Veuillez effectuer votre paiement par transfert bancaire en utilisant les coordonn&eacute;es ci-dessous ou par
