@@ -1,27 +1,49 @@
 <apex:page standardController="Facture__c" renderAs="pdf" showHeader="false" extensions="FactureExtensionEn">
-        <head>
+
+    <head>
         <apex:stylesheet value="{!URLFOR($Resource.Addinsoft_Css)}" />
         <title>Invoice #{!Facture__c.FR_Invoice_Code__c}</title>
-        <style>@page {size:{!IF(CountryCode == 'US', 'letter', 'A4')}};}</style>
+        <style>
+            @page {
+                size: {
+                    !IF(CountryCode=='US', 'letter', 'A4')
+                }
+            }
+
+            ;
+            }
+        </style>
     </head>
-    <body>   
+
+    <body>
         <!-- logo Addinsoft-->
-        <div><apex:image url="{!URLFOR($Resource.ADDINSOFT_LOGO)}"/></div>
-            
+        <div>
+            <apex:image url="{!URLFOR($Resource.ADDINSOFT_LOGO)}" />
+        </div>
+
         <!-- Addinsof Address and contacts -->
-        <div><ul>
-            <apex:repeat value="{!addinsoftCompanyLines}" var="line">
-                <li><apex:outputText value="{!line}" escape="false" /></li>
-            </apex:repeat>     
-        </ul></div>
+        <div>
+            <ul>
+                <apex:repeat value="{!addinsoftCompanyLines}" var="line">
+                    <li>
+                        <apex:outputText value="{!line}" escape="false" />
+                    </li>
+                </apex:repeat>
+            </ul>
+        </div>
 
         <!-- client address and contacts -->
         <div class="mt">
             <ul>
-                <li><span class="m-bold">Bill to:</span></li>
+                <li>
+                    <span class="m-bold">Bill to:</span>
+                </li>
                 <li>{!Facture__c.AccountName__c}</li>
                 <li>{!Facture__c.ContactName__c}</li>
-                <li><apex:outputText value="{!SUBSTITUTE(JSENCODE(Facture__c.BillingStreet__c),'\r\n','<li></li>')}" escape="false" /></li>
+                <li>
+                    <apex:outputText value="{!SUBSTITUTE(JSENCODE(Facture__c.BillingStreet__c),'\r\n','<li></li>')}" escape="false"
+                    />
+                </li>
                 <li>{!Facture__c.BillingCity__c}&nbsp;{!State}&nbsp;{!Facture__c.BillingPostalCode__c}</li>
                 <li>{!Country}</li>
             </ul>
@@ -29,75 +51,132 @@
 
         <!-- Facture number and date -->
         <div class="mt-2">
-            <p><span class="m-bold">Invoice Nbr {!Facture__c.FR_Invoice_Code__c}</span></p>
-            <p>Date :&nbsp;<apex:outputText value="{0,date,MMMM d','  yyyy}"><apex:param value="{!Facture__c.Date__c}" /></apex:outputText></p>     
-            <apex:outputPanel rendered="{!Facture__c.ENBonDeCommande__c}" layout="none"><p>This invoice corresponds to your order number {!Facture__c.Commande_lie__r.R_f_Bon_de_commande__c}</p></apex:outputPanel>     
-            <apex:variable var="foo" value="bar" rendered="{!hasTVACustomer}"><p>Your VAT Nbr {!Facture__c.Commande_lie__r.Account.Num_ro_de_TVA__c}</p></apex:variable>
+            <p>
+                <span class="m-bold">Invoice Nbr {!Facture__c.FR_Invoice_Code__c}</span>
+            </p>
+            <p>Date :&nbsp;
+                <apex:outputText value="{0,date,MMMM d','  yyyy}">
+                    <apex:param value="{!Facture__c.Date__c}" /></apex:outputText>
+            </p>
+            <apex:outputPanel rendered="{!Facture__c.ENBonDeCommande__c}" layout="none">
+                <p>This invoice corresponds to your order number {!Facture__c.Commande_lie__r.R_f_Bon_de_commande__c}</p>
+            </apex:outputPanel>
+            <apex:variable var="foo" value="bar" rendered="{!hasTVACustomer}">
+                <p>Your VAT Nbr {!Facture__c.Commande_lie__r.Account.Num_ro_de_TVA__c}</p>
+            </apex:variable>
         </div>
 
-         <!-- Lignes de produits --> 
-        <div class="mt-2 border-top"><table class="table-produits">
-            <thead><tr>
-                    <th>Description</th>
-                    <th>User type</th>
-                    <th>License type</th>
-                    <th>QTY</th>
-                    <th>Unit Price</th>
-                    <!-- start discount --><apex:outputText rendered="{!Facture__c.Commande_lie__r.HasDiscount__c}" value="<th>D&percnt;</th>" escape="false" /><!-- end discount -->
-                    <th>Amount</th>
-            </tr></thead>
-            <tbody>
-                <apex:variable value="{!1}" var="i"/>
-                <apex:repeat value="{!orderItems}" var="orderItem">
-                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};">
-                    <td>{!orderItem.PricebookEntry.Product2.Libelle_Devis__c}</td>
-                    <td>{!orderItem.PricebookEntry.Product2.Domaine_utilisateur_en__c}</td>
-                    <td>{!orderItem.PricebookEntry.Product2.Type_licence_desc_EN__c}</td>
-                    <td><apex:outputText value="{0, number, integer}"><apex:param value="{!orderItem.quantity}" /></apex:outputText></td>
-                    <td>{!orderItem.UnitPriceWithCurrency__c}</td>                    
-                    <!-- start discount --><apex:outputText rendered="{!Facture__c.Commande_lie__r.HasDiscount__c}" value="<td>{!orderItem.Percent_Discount_Facture__c}</td>" escape="false" /><!-- end discount -->
-                    <td align="right">{!orderItem.TotalPriceAfterDiscountWithCurrency__c}</td>
-                </tr>
-                <apex:variable value="{!i+1}" var="i" />
-                </apex:repeat>
-                <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="7">&nbsp;</td></tr>
-                <tr style="background-color:{!IF(mod(i+1,2)==0, '#FFFFFF', '#EDEDED')};"><td colspan="7">&nbsp;</td></tr>
-                <tr><td colspan="7">&nbsp;</td></tr>
-                <apex:variable var="foo" value="bar" rendered="{!hasTVA}">
-                    <tr><td align="right" colspan="7">TOTAL (excl. taxes): {!Facture__c.Commande_lie__r.TotalAmountAfterDiscountWithCurrency__c}</td></tr>
-                    <tr><td align="right" colspan="7">VAT ({!Facture__c.TVA__c} %): {!Facture__c.AmountTVAWithCurrency__c}</td></tr>
-                </apex:variable>
-                <tr><td align="right" colspan="7"><span class="m-bold">GRAND TOTAL: {!Facture__c.TotalAmountAfterTVAWithCurrency__c}</span></td></tr>
-            </tbody>
-        </table></div>
+        <!-- Lignes de produits -->
+        <div class="mt-2 border-top">
+            <table class="table-produits">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>User type</th>
+                        <th>License type</th>
+                        <th>QTY</th>
+                        <th>Unit Price</th>
+                        <!-- start discount -->
+                        <apex:outputText rendered="{!Facture__c.Commande_lie__r.HasDiscount__c}" value="<th>D&percnt;</th>"
+                            escape="false" />
+                        <!-- end discount -->
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:variable value="{!1}" var="i" />
+                    <apex:repeat value="{!orderItems}" var="orderItem">
+                        <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};">
+                            <td>{!orderItem.PricebookEntry.Product2.Libelle_Devis__c}</td>
+                            <td>{!orderItem.PricebookEntry.Product2.Domaine_utilisateur_en__c}</td>
+                            <td>{!orderItem.PricebookEntry.Product2.Type_licence_desc_EN__c}</td>
+                            <td>
+                                <apex:outputText value="{0, number, integer}">
+                                    <apex:param value="{!orderItem.quantity}" /></apex:outputText>
+                            </td>
+                            <td>{!orderItem.UnitPriceWithCurrency__c}</td>
+                            <!-- start discount -->
+                            <apex:outputText rendered="{!Facture__c.Commande_lie__r.HasDiscount__c}" value="<td>{!orderItem.Percent_Discount_Facture__c}</td>"
+                                escape="false" />
+                            <!-- end discount -->
+                            <td align="right">{!orderItem.TotalPriceAfterDiscountWithCurrency__c}</td>
+                        </tr>
+                        <apex:variable value="{!i+1}" var="i" />
+                    </apex:repeat>
+                    <tr style="background-color:{!IF(mod(i,2)==0, '#FFFFFF', '#EDEDED')};">
+                        <td colspan="7">&nbsp;</td>
+                    </tr>
+                    <tr style="background-color:{!IF(mod(i+1,2)==0, '#FFFFFF', '#EDEDED')};">
+                        <td colspan="7">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">&nbsp;</td>
+                    </tr>
+                    <apex:variable var="foo" value="bar" rendered="{!hasTVA}">
+                        <tr>
+                            <td align="right" colspan="7">TOTAL (excl. taxes): {!Facture__c.Commande_lie__r.TotalAmountAfterDiscountWithCurrency__c}</td>
+                        </tr>
+                        <tr>
+                            <td align="right" colspan="7">VAT ({!Facture__c.TVA__c} %): {!Facture__c.AmountTVAWithCurrency__c}</td>
+                        </tr>
+                    </apex:variable>
+                    <tr>
+                        <td align="right" colspan="7">
+                            <span class="m-bold">GRAND TOTAL: {!Facture__c.TotalAmountAfterTVAWithCurrency__c}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!--vilain spacer au-dessus de contenus dynamique-->
         <p>&nbsp;</p>
 
         <!-- 1 year support -->
-        <apex:outputPanel rendered="{!Facture__c.Commande_Lie__r.Type_licence__c == 'Perpétuelle'}" layout="none"><p class="mt-2">* Includes 1 year of upgrades and email support</p></apex:outputPanel>
-            
+        <apex:outputPanel rendered="{!Facture__c.Commande_Lie__r.Type_licence__c == 'Perpétuelle'}" layout="none">
+            <p class="mt-2">* Includes 1 year of upgrades and email support</p>
+        </apex:outputPanel>
+
         <!-- Note -->
-        <apex:outputPanel rendered="{!Facture__c.HasNoteEN__c}" layout="none"><p class="mt-2">Note: {!Facture__c.Note_facture__c}</p></apex:outputPanel>          
-            
-         <!-- Livraison -->
-        <p class="mt-2">Delivered to the mailbox: {!Facture__c.Commande_lie__r.Contact_Email__c}</p>    
-        
+        <apex:outputPanel rendered="{!Facture__c.HasNoteEN__c}" layout="none">
+            <p class="mt-2">Note: {!Facture__c.Note_facture__c}</p>
+        </apex:outputPanel>
+
+        <!-- Livraison -->
+        <p class="mt-2">Delivered to the mailbox: {!Facture__c.Commande_lie__r.Contact_Email__c}</p>
+
         <!-- facture à régler -->
-        <apex:outputPanel rendered="{! !Facture__c.PayedWithStripe__c}" layout="none">   
-            <!-- Coordonnées bancaire -->        
-            <p class="mt-2">Please use the bank account information below to order a bank wire transfer. IMPORTANT: We would be grateful if you indicate our invoice number in your payment order.</p>
+        <apex:outputPanel rendered="{! !Facture__c.PayedWithStripe__c}" layout="none">
+            <!-- CGU  -->
+            <p class="mt-2">In accordance with our GTC available on our website, payment is due 30 days after reception of the invoice.</p>
+
+            <!-- Coordonnées bancaire -->
+            <p class="mt-2">Please use the bank account information below to order a bank wire transfer. IMPORTANT: We would be grateful
+                if you indicate our invoice number in your payment order.</p>
 
             <!--Compte Bancaire -->
-            <p class="mt"><ul><apex:repeat value="{!bankAccountLines}" var="line"><li><apex:outputText value="{!line}" escape="false" /></li></apex:repeat></ul></p>
+            <p class="mt">
+                <ul>
+                    <apex:repeat value="{!bankAccountLines}" var="line">
+                        <li>
+                            <apex:outputText value="{!line}" escape="false" />
+                        </li>
+                    </apex:repeat>
+                </ul>
+            </p>
         </apex:outputPanel>
 
         <!-- facture acquittée -->
-        <apex:outputPanel rendered="{! Facture__c.PayedWithStripe__c}" layout="none">    
-            <p class="mt">Payment by secure payment platform on &nbsp;<apex:outputText value="{0,date,MMMM d','  yyyy}"><apex:param value="{!Facture__c.Date__c}" /></apex:outputText></p>
+        <apex:outputPanel rendered="{! Facture__c.PayedWithStripe__c}" layout="none">
+            <p class="mt">Payment by secure payment platform on &nbsp;
+                <apex:outputText value="{0,date,MMMM d','  yyyy}">
+                    <apex:param value="{!Facture__c.Date__c}" /></apex:outputText>
+            </p>
         </apex:outputPanel>
 
-        <!-- Footer : Thanks -->    
-        <div class="footer"><p class="underline-orange mt-2">Thank you for choosing our solutions</p></div>
-    </body>       
+        <!-- Footer : Thanks -->
+        <div class="footer">
+            <p class="underline-orange mt-2">Thank you for choosing our solutions</p>
+        </div>
+    </body>
 </apex:page>
